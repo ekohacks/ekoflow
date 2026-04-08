@@ -1,0 +1,119 @@
+#!/usr/bin/env bash
+# ============================================================
+#  dojo-init: Create a new Ekohacks kata project
+#
+#  Usage:
+#    dojo-init my-first-kata
+#    dojo-init fizzbuzz
+#    dojo-init tic-tac-toe
+#
+#  What it does:
+#    1. Creates a project folder with src/ and test/
+#    2. Writes a package.json with vitest
+#    3. Creates a starter test file
+#    4. Runs npm install
+#    5. Initialises git and makes the first commit
+#
+#  After running:
+#    cd <project-name>
+#    tw                    (watch mode)
+#    nvim test/example.test.js   (start writing tests)
+# ============================================================
+
+set -euo pipefail
+
+# ── Validate input ──────────────────────────────────────────
+
+if [ $# -eq 0 ]; then
+  echo ""
+  echo "  Usage: dojo-init <project-name>"
+  echo ""
+  echo "  Example: dojo-init fizzbuzz"
+  echo ""
+  exit 1
+fi
+
+NAME="$1"
+
+if [ -d "$NAME" ]; then
+  echo "ERROR: Folder '$NAME' already exists."
+  exit 1
+fi
+
+# ── Scaffold ────────────────────────────────────────────────
+
+echo ""
+echo "  Creating kata: $NAME"
+echo ""
+
+mkdir -p "$NAME/src" "$NAME/test"
+cd "$NAME"
+
+# ── package.json ────────────────────────────────────────────
+
+cat > package.json << 'PKG'
+{
+  "name": "ekohacks-kata",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest --watch",
+    "test:verbose": "vitest run --reporter=verbose"
+  },
+  "devDependencies": {
+    "vitest": "^4.1"
+  }
+}
+PKG
+
+# ── Starter test ────────────────────────────────────────────
+
+cat > test/example.test.js << 'TEST'
+import { describe, it, expect } from 'vitest'
+
+describe('kata', () => {
+  it('should pass this first test', () => {
+    expect(true).toBe(true)
+  })
+})
+TEST
+
+# ── Starter source ──────────────────────────────────────────
+
+cat > src/index.js << 'SRC'
+// Your code here. Write the test first.
+SRC
+
+# ── .gitignore ──────────────────────────────────────────────
+
+cat > .gitignore << 'GIT'
+node_modules/
+coverage/
+.DS_Store
+GIT
+
+# ── Install ─────────────────────────────────────────────────
+
+echo "  Installing vitest..."
+npm install --silent
+
+# ── Git ─────────────────────────────────────────────────────
+
+git init --quiet
+git add -A
+git commit --quiet -m "red: initial scaffold"
+
+# ── Done ────────────────────────────────────────────────────
+
+echo ""
+echo "  ╔═══════════════════════════════════════╗"
+echo "  ║       Kata ready: $NAME"
+echo "  ╚═══════════════════════════════════════╝"
+echo ""
+echo "  Next steps:"
+echo "    cd $NAME"
+echo "    tw                          (watch tests)"
+echo "    nvim test/example.test.js   (write your first real test)"
+echo ""
+echo "  Red -> Green -> Refactor"
+echo ""

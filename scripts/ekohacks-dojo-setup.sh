@@ -13,7 +13,7 @@
 #    - Installs i3 window manager (keyboard driven, no mouse)
 #    - Installs and configures Neovim (bespoke Ekohacks config)
 #    - Installs tmux with TDD split layout
-#    - Installs Node.js 20 and vitest
+#    - Installs Node.js 22 and vitest
 #    - Configures git with TDD workflow aliases
 #    - Sets up Alacritty terminal with Ekohacks colour scheme
 #    - Creates shell aliases for daily dojo work
@@ -46,7 +46,7 @@ NVIM_CONFIG="$HOME/.config/nvim"
 I3_CONFIG="$HOME/.config/i3"
 ALACRITTY_CONFIG="$HOME/.config/alacritty"
 TMUX_CONF="$HOME/.tmux.conf"
-NODE_VERSION="20"
+NODE_VERSION="22"
 LOG_FILE="$HOME/ekohacks-setup.log"
 
 # Log everything
@@ -164,7 +164,7 @@ echo "────────────────────────�
 export NVM_DIR="$HOME/.nvm"
 
 if [ ! -d "$NVM_DIR" ]; then
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
 fi
 
 # shellcheck source=/dev/null
