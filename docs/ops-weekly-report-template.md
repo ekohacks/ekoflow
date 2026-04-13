@@ -12,7 +12,7 @@ Each day of the week has a purpose. Follow this rhythm.
 
 ### Monday — Plan
 
-- [ ] Review the 90-day plan. Read the tasks for your current week.
+- [X] Review the 90-day plan. Read the tasks for your current week.
 - [ ] Write down your top 5 tasks for the week in this report (Section 8 below).
 - [ ] Update your calendar with any meetings, deadlines, or dojo sessions this week.
 - [ ] Check if you have any unfinished tasks from last week. Carry them forward or drop them with a reason.
