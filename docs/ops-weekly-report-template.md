@@ -36,7 +36,7 @@ Each day of the week has a purpose. Follow this rhythm.
 
 ### Any Day — Pairing
 
-- [ ] If you are stuck for more than 15 minutes, set up a screen sharing call. Do not wait.
+- [x] If you are stuck for more than 15 minutes, set up a screen sharing call. Do not wait.
 - [ ] If another dev is working on something you can learn from, ask to watch. We pair here.
 - [ ] If you finish a checkpoint or a major task, set up a short call to demonstrate it live.
 
