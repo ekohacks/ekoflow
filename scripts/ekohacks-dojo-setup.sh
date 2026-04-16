@@ -82,7 +82,8 @@ sudo apt install -y \
   unzip \
   xclip \
   htop \
-  tree
+  tree \
+  bash-completion
 
 # i3 window manager and X11
 sudo apt install -y \
@@ -728,6 +729,11 @@ cat >> "$HOME/.bashrc" << 'BASH_EOF'
 # ============================================================
 #  EKOHACKS DOJO ENVIRONMENT
 # ============================================================
+
+# Enable bash completion (tab complete for git, apt, and other commands)
+if [ -f /usr/share/bash-completion/bash_completion ]; then
+  . /usr/share/bash-completion/bash_completion
+fi
 
 # Prompt: clean, shows git branch and exit code
 parse_git_branch() {
