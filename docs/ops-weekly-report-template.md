@@ -13,14 +13,14 @@ Each day of the week has a purpose. Follow this rhythm.
 ### Monday — Plan
 
 - [X] Review the 90-day plan. Read the tasks for your current week.
-- [ ] Write down your top 5 tasks for the week in this report (Section 8 below).
+- [x] Write down your top 5 tasks for the week in this report (Section 8 below).
 - [ ] Update your calendar with any meetings, deadlines, or dojo sessions this week.
 - [ ] Check if you have any unfinished tasks from last week. Carry them forward or drop them with a reason.
 - [ ] Post your weekly plan in Slack: "This week I am doing: 1... 2... 3..."
 
 ### Tuesday to Thursday — Execute
 
-- [ ] Work through your task list. One task at a time until it is done.
+- [x] Work through your task list. One task at a time until it is done.
 - [ ] Commit and push daily. Every day should have at least one commit.
 - [ ] Practice your current week's tools. If the plan says learn tmux, use tmux all day. Do not fall back to old habits.
 - [ ] If a task from the 90-day plan is finished, move to the next one. Do not wait for someone to tell you.
