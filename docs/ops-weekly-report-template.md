@@ -6,41 +6,34 @@
 
 ---
 
-## Your Weekly Structure
+## Every Day
 
-Each day has a different purpose. Monday is for planning so you know what you are doing before you start doing it. Tuesday to Thursday is for execution — heads down, one task at a time. Friday is for stepping back, seeing the whole week, and setting up the next one.
+Your daily routine is in the [Daily Report Template](ops-daily-report-template.md). Follow it every day. It covers your morning startup, how to work through the day, and how to close out.
 
-This rhythm exists because without it, weeks blur together. You do a bit of everything, finish nothing cleanly, and cannot tell anyone what you accomplished. The structure turns five disconnected days into a cycle with a clear start, middle, and end.
+This weekly template adds two things on top of that daily routine: a Monday setup and a Friday report. The rest of the week, you just follow the daily routine and work through your tasks.
 
-### Monday — Plan
+### Monday extra (30 minutes)
 
-- [ ] Review the 90-day plan. Read the tasks for your current week.
-- [ ] Write down your top 5 tasks for the week in this report (Section 8 below).
-- [ ] Update your calendar with any meetings, deadlines, or dojo sessions this week.
-- [ ] Check if you have any unfinished tasks from last week. Carry them forward or drop them with a reason. Dropping a task is fine — but write down why so you are making a decision, not just forgetting.
-- [ ] Post your weekly plan in Slack: "This week I am doing: 1... 2... 3..."
+On Monday morning, after your daily startup (steps 1-5 in the daily template), do these before you start working. This is how you turn five disconnected days into a week with a clear shape. You know exactly what you are trying to finish by Friday.
 
-### Tuesday to Thursday — Execute
+- [ ] Write down your top 5 tasks for the week in Section 8 of this report. Pull them from the 90-day plan and any ongoing ops work.
+- [ ] Check if anything from last week is unfinished. Either carry it forward to this week's list or drop it. If you drop it, write one sentence saying why, so you are making a decision, not just forgetting.
+- [ ] Post your weekly plan in Slack: "This week: 1... 2... 3..."
 
-- [ ] Work through your task list. One task at a time until it is done.
-- [ ] Commit and push daily. Every day should have at least one commit.
-- [ ] Practice your current week's tools. If the plan says learn tmux, use tmux all day. Old habits feel safer but they do not build new skills.
-- [ ] If a task from the 90-day plan is finished, move to the next one. You do not need permission to keep going.
-- [ ] Post a short Slack update before logging off each day.
+Then start working. Monday is not a planning day. It is a working day with 30 extra minutes of setup.
 
-### Friday — Report and Reflect
+### Friday extra (45 minutes)
 
-- [ ] Finish any tasks you can close out.
+On Friday, stop working 45 minutes before end of day. This is when you step back and see the whole week, not just today, but the pattern of what worked and what did not. That is how you get better week over week.
+
 - [ ] Fill out the full weekly report below.
-- [ ] Do your weekly checkpoint: can you do the checkpoint task for your current week without help? Be honest. The checkpoint is for you, not for anyone else. If you pass it, you know you are ready. If you do not, you know what to practice.
+- [ ] Do the checkpoint for your current week: can you do the checkpoint task without help? Write yes or no honestly. The checkpoint is for you. If you pass it, you know you are ready to move on. If you do not, you know what to practice.
 - [ ] Push the weekly report to the ops repo.
-- [ ] Post your summary in Slack: what got done, what is blocked, what is planned for next week.
+- [ ] Post in Slack: what got done this week, what is blocked, what you are doing next week.
 
-### Any Day — Pairing
+### If you finish a big task or checkpoint
 
-- [ ] If you are stuck for more than 15 minutes, set up a screen sharing call.
-- [ ] If another dev is working on something you can learn from, ask to watch.
-- [ ] If you finish a checkpoint or a major task, set up a short call to demonstrate it live. Showing your work is how you confirm you actually understand it.
+Set up a short screen sharing call to show it. Showing your work is how you confirm you actually understand it. Explaining something out loud reveals gaps that reading it in your head does not.
 
 ---
 
@@ -71,7 +64,7 @@ Anything stopping you from making progress. For each blocker, say what you need 
 
 ### 4. Numbers
 
-Fill in any that apply this week. Write 0 if none, do not leave blank. Numbers show trends — if enquiries are climbing, you might need to adjust your week. If commits are dropping, something is slowing you down.
+Fill in any that apply this week. Write 0 if none, do not leave blank. Numbers show trends. If enquiries are climbing, you might need to adjust your week. If commits are dropping, something is slowing you down.
 
 - Student enquiries received: 
 - Student enquiries responded to: 
@@ -82,7 +75,7 @@ Fill in any that apply this week. Write 0 if none, do not leave blank. Numbers s
 
 ### 5. What I Learned This Week
 
-Two or three things you understand better now than you did on Monday. Connect each one to the work you did. "I learned tmux" is vague. "I learned to split tmux panes so I can edit in one pane and run tests in the other, which made the newsletter workflow faster" shows you understand why it matters.
+Two or three things you understand better now than you did on Monday. Connect each one to the work you did. "I learned tmux" is weak. "I learned to split tmux panes so I can edit in one pane and test in the other, which made the newsletter workflow faster" is strong.
 
 1. 
 2. 
@@ -90,7 +83,7 @@ Two or three things you understand better now than you did on Monday. Connect ea
 
 ### 6. Checkpoint
 
-What is the checkpoint for your current week in the 90-day plan? Write it here. Then answer honestly: can you do it without help right now?
+What is the checkpoint for your current week in the 90-day plan? Write it here. Then answer: can you do it without help right now?
 
 **Checkpoint task:**  
 **Can I do it without help? (yes/no):**  
@@ -98,7 +91,7 @@ What is the checkpoint for your current week in the 90-day plan? Write it here. 
 
 ### 7. Reflection
 
-This section is how you get better week over week. Noticing what worked lets you do more of it. Noticing what didn't lets you change it. The question "what will I do differently?" turns observation into action.
+This section is how you get better week over week. Noticing what worked lets you do more of it. Noticing what did not lets you change it. The question "what will I do differently?" turns observation into action.
 
 **What went well this week?**
 
@@ -111,7 +104,7 @@ This section is how you get better week over week. Noticing what worked lets you
 
 ### 8. Plan for Next Week
 
-List your top 5 tasks for next week in order of priority. Pull these from the 90-day plan and any ongoing ops work. Five is the limit — more than five and nothing gets finished properly.
+List your top 5 tasks for next week in order of priority. Pull these from the 90-day plan and any ongoing ops work. Five is the limit. More than five and nothing gets finished properly.
 
 1. 
 2. 

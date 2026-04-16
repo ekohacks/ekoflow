@@ -12,7 +12,7 @@ This guide teaches you git by using it. You will be editing files in the Ekohack
 
 ## What Is a Terminal?
 
-A terminal is a window where you type instructions to your computer instead of clicking on things. If you are on a dojo machine, you already have one — press `Super + Enter` to open it. If you are on your own machine, find the app called Terminal (Mac or Linux) or PowerShell (Windows).
+A terminal is a window where you type instructions to your computer instead of clicking on things. If you are on a dojo machine, you already have one. Press `Super + Enter` to open it. If you are on your own machine, find the app called Terminal (Mac or Linux) or PowerShell (Windows).
 
 You will see a blinking cursor. That is where you type. Every command you type gets run when you press Enter.
 
@@ -30,7 +30,7 @@ The reason this matters: when something breaks, you can find the exact moment it
 
 ## What Is GitHub?
 
-Git works on your computer. GitHub is a website that stores a copy of your work online. When you "push" your work to GitHub, your instructor can see it, review it, and give feedback — all without needing your laptop.
+Git works on your computer. GitHub is a website that stores a copy of your work online. When you "push" your work to GitHub, your instructor can see it, review it, and give feedback, all without needing your laptop.
 
 Git is the tool. GitHub is where the work lives so other people can see it.
 
@@ -87,7 +87,7 @@ Every time you sit down to work, you follow the same six steps. Each step solves
 git pull origin main
 ```
 
-**Why this matters.** Other people might have changed things since the last time you worked. If you start editing without pulling first, you are editing an old version. That causes conflicts later — git does not know whose version to keep.
+**Why this matters.** Other people might have changed things since the last time you worked. If you start editing without pulling first, you are editing an old version. That causes conflicts later because git does not know whose version to keep.
 
 This is the most important habit. Pull before you start. Every time.
 
@@ -147,7 +147,7 @@ This command answers the question: what have I touched since my last save?
 git add issues/01-what-is-software-craftsmanship.md
 ```
 
-**Why is this a separate step?** Because sometimes you change five files but only want to save three of them right now. `git add` lets you choose exactly what goes into each snapshot. It is like choosing which photos go into an album — you pick the ones that belong together.
+**Why is this a separate step?** Because sometimes you change five files but only want to save three of them right now. `git add` lets you choose exactly what goes into each snapshot. It is like choosing which photos go into an album. You pick the ones that belong together.
 
 Run `git status` again. The file should now appear in green. Green means "ready to be saved."
 
@@ -159,12 +159,12 @@ Run `git status` again. The file should now appear in green. Green means "ready 
 git commit -m "draft: issue 01 first draft"
 ```
 
-**What this does.** It takes everything in green (everything you `add`ed) and saves a permanent snapshot with a message explaining what you did. That message matters — six months from now, someone will read it to understand what happened here.
+**What this does.** It takes everything in green (everything you `add`ed) and saves a permanent snapshot with a message explaining what you did. That message matters because six months from now, someone will read it to understand what happened here.
 
 Good messages describe what you did and why:
-- `"draft: first draft of issue 01"` — clear
-- `"fix: corrected the date in the header"` — specific
-- `"updated stuff"` — useless, do not write this
+- `"draft: first draft of issue 01"` is clear
+- `"fix: corrected the date in the header"` is specific
+- `"updated stuff"` is useless, do not write this
 
 After committing, run `git status` again. It should say "nothing to commit, working tree clean." Everything is saved.
 

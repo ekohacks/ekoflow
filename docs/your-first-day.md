@@ -171,10 +171,10 @@ This closes whatever window is active. Try opening two terminals and closing one
 i3 gives you four workspaces. Think of them as four separate desks. You can only see one desk at a time, but you can switch between them instantly.
 
 ```
-Super + 1    (workspace 1 — this is where your terminals live)
+Super + 1    (workspace 1, this is where your terminals live)
 Super + 2    (workspace 2)
 Super + 3    (workspace 3)
-Super + 4    (workspace 4 — this is where Firefox lives)
+Super + 4    (workspace 4, this is where Firefox lives)
 ```
 
 Try pressing `Super + 2`. The screen goes empty. That is workspace 2. Nothing is there yet. Press `Super + 1` to go back to your terminals.

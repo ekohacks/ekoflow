@@ -12,7 +12,7 @@ This takes about 45 minutes. You will need a USB stick (at least 1GB) and a wifi
 
 ### Back Up Your Files
 
-This process erases Windows completely. Everything on your laptop will be gone. If there is anything you want to keep — photos, documents, anything — copy it to an external drive or Google Drive now. Not later. Now.
+This process erases Windows completely. Everything on your laptop will be gone. If there is anything you want to keep (photos, documents, anything) copy it to an external drive or Google Drive now. Not later. Now.
 
 ### What You Need
 
@@ -30,9 +30,9 @@ On your current computer, go to:
 https://www.debian.org/distrib/netinst
 ```
 
-Download the file called **debian-13.x.x-amd64-netinst.iso**. It is about 600MB. The version number changes — pick the most recent one.
+Download the file called **debian-13.x.x-amd64-netinst.iso**. It is about 600MB. The version number changes, so pick the most recent one.
 
-Why Debian? There are hundreds of Linux distributions. Debian was chosen because it is stable, well supported, and will receive security updates until 2030. It does not try to be flashy. It does what you tell it and stays out of the way. That matters when you are learning — you do not want your operating system surprising you.
+Why Debian? There are hundreds of Linux distributions. Debian was chosen because it is stable, well supported, and will receive security updates until 2030. It does not try to be flashy. It does what you tell it and stays out of the way. That matters when you are learning because you do not want your operating system surprising you.
 
 Why the netinst version? It is a minimal installer. Instead of downloading 4GB of software you might not need, it downloads only what you ask for during installation. You are going to ask for almost nothing, because the setup script handles the rest.
 
@@ -40,7 +40,7 @@ Why the netinst version? It is a minimal installer. Instead of downloading 4GB o
 
 ## Part 2: Making the USB Bootable
 
-You cannot just copy the .iso file onto the USB stick. A bootable USB has a special structure that tells the computer "you can start up from me." Copying the file would be like putting a CD in a drawer — it is there, but nothing knows how to play it.
+You cannot just copy the .iso file onto the USB stick. A bootable USB has a special structure that tells the computer "you can start up from me." Copying the file would be like putting a CD in a drawer. It is there, but nothing knows how to play it.
 
 ### On Windows
 
@@ -58,7 +58,7 @@ Download balenaEtcher from https://etcher.balena.io. Open it. Click "Flash from 
 
 ## Part 3: Changing Your Laptop's BIOS Settings
 
-Your laptop has a tiny program built into it called the BIOS. It runs before anything else — before Windows, before Linux, before anything. The BIOS decides what to boot from and how the hardware behaves.
+Your laptop has a tiny program built into it called the BIOS. It runs before anything else: before Windows, before Linux, before anything. The BIOS decides what to boot from and how the hardware behaves.
 
 You need to change three things in the BIOS so your laptop will start from the USB stick and let Linux run.
 
@@ -80,7 +80,7 @@ Find the Boot tab. Make sure USB is listed before the hard drive. This tells the
 
 **Storage Mode → AHCI (if you see it)**
 
-Some HP EliteBooks have a setting called SATA Emulation or Intel RST. If you see this, change it to AHCI. This is about how the laptop talks to its hard drive. Linux works better with AHCI. If you do not see this setting, skip it — not every laptop has it.
+Some HP EliteBooks have a setting called SATA Emulation or Intel RST. If you see this, change it to AHCI. This is about how the laptop talks to its hard drive. Linux works better with AHCI. If you do not see this setting, skip it. Not every laptop has it.
 
 Press **F10** to save and exit. The laptop restarts.
 
@@ -90,7 +90,7 @@ Press **F10** to save and exit. The laptop restarts.
 
 Turn off your laptop. Plug in the USB stick. Turn it on.
 
-If you set the boot order correctly, the Debian installer will appear. If Windows starts instead, turn the laptop off and try again — this time press **F9** during startup. That opens a one-time boot menu where you can manually select the USB stick.
+If you set the boot order correctly, the Debian installer will appear. If Windows starts instead, turn the laptop off and try again. This time press **F9** during startup. That opens a one-time boot menu where you can manually select the USB stick.
 
 ---
 
@@ -130,11 +130,11 @@ Press Enter. You do not need this.
 
 Press Enter twice. This is intentional.
 
-On Linux, "root" is the administrator account. It can do anything — install software, delete the entire system, change any file. If you set a root password, you get a separate administrator account. If you leave it blank, Debian gives your normal user account the ability to run administrator commands when needed (using a command called `sudo`). That is safer because you use your own password and you have to explicitly ask for admin power each time.
+On Linux, "root" is the administrator account. It can do anything: install software, delete the entire system, change any file. If you set a root password, you get a separate administrator account. If you leave it blank, Debian gives your normal user account the ability to run administrator commands when needed (using a command called `sudo`). That is safer because you use your own password and you have to explicitly ask for admin power each time.
 
 ### User Account
 
-Type your full name. Choose a short, lowercase username — something like **kofi** or **ada** or **nico**. Set a password and remember it. You will need it every time you install something.
+Type your full name. Choose a short, lowercase username, something like **kofi** or **ada** or **nico**. Set a password and remember it. You will need it every time you install something.
 
 ### Time Zone → Your time zone
 
@@ -162,7 +162,7 @@ You will see a list with checkboxes. **Uncheck everything except:**
 
 Uncheck "Debian desktop environment", uncheck "GNOME", uncheck everything else. Use the arrow keys to move and the spacebar to check or uncheck.
 
-Why uncheck everything? Because the Ekohacks setup script installs exactly what you need — nothing more, nothing less. If you install GNOME (a desktop environment), you get a mouse-driven interface with menus and icons that uses over a gigabyte of RAM. You do not want that. You are going to use i3, which uses almost nothing and is controlled entirely by the keyboard. The setup script handles this.
+Why uncheck everything? Because the Ekohacks setup script installs exactly what you need, nothing more, nothing less. If you install GNOME (a desktop environment), you get a mouse driven interface with menus and icons that uses over a gigabyte of RAM. You do not want that. You are going to use i3, which uses almost nothing and is controlled entirely by the keyboard. The setup script handles this.
 
 ### GRUB Boot Loader → Yes
 
@@ -186,7 +186,7 @@ ekohacks login:
 
 Type your username and press Enter. Type your password and press Enter.
 
-You will not see any characters when typing your password. The cursor does not move. Nothing appears on screen. That is normal — it is a security feature so nobody looking over your shoulder can see how long your password is. Your keystrokes are being registered. Just type and press Enter.
+You will not see any characters when typing your password. The cursor does not move. Nothing appears on screen. That is normal. It is a security feature so nobody looking over your shoulder can see how long your password is. Your keystrokes are being registered. Just type and press Enter.
 
 You are now logged in. You see a blinking cursor. This is your terminal.
 
@@ -250,7 +250,7 @@ It will ask for your password once. After that it runs for 10 to 15 minutes. You
 
 When it finishes you will see "SETUP COMPLETE" with next steps.
 
-What just happened? The script installed a window manager (i3), a terminal (Alacritty), a text editor (Neovim), a test runner (vitest), Node.js for JavaScript, Firefox for browsing, and a dozen other tools — all configured to work together. It also set up keyboard shortcuts, shell commands, and a TDD workflow. Everything you need, nothing you do not.
+What just happened? The script installed a window manager (i3), a terminal (Alacritty), a text editor (Neovim), a test runner (vitest), Node.js for JavaScript, Firefox for browsing, and a dozen other tools, all configured to work together. It also set up keyboard shortcuts, shell commands, and a TDD workflow. Everything you need, nothing you do not.
 
 ---
 
@@ -338,7 +338,7 @@ Then try `startx` again.
 
 ### The setup script fails partway through
 
-Read the last error message. Copy it down exactly. Then try running the script again — it is safe to run multiple times. If it keeps failing at the same point, send the error to your instructor along with the log file at `~/ekohacks-setup.log`.
+Read the last error message. Copy it down exactly. Then try running the script again. It is safe to run multiple times. If it keeps failing at the same point, send the error to your instructor along with the log file at `~/ekohacks-setup.log`.
 
 ### You typed something wrong in the Debian installer
 
