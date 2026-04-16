@@ -300,9 +300,29 @@ You do not need to memorise this now. Come back to it when you need it.
 
 ---
 
+## When Something Goes Wrong
+
+At some point a command will not work. You will see an error message. That is normal. Errors are not failures. They are the computer telling you exactly what went wrong. The skill is learning to read them.
+
+### How to fix things yourself
+
+1. **Read the error.** Look at the last few lines the terminal printed. They usually say what happened. Do not skip this. Do not immediately try something else.
+
+2. **Copy the error.** Select the text in your terminal by clicking and dragging, then press `Ctrl+Shift+C` to copy it. (Not `Ctrl+C`, which does something different in the terminal.)
+
+3. **Search for it.** Switch to Firefox (`Super+4`). Go to google.com. Paste the error message and add the word "debian" or "linux". Read the first few results. Sites like Stack Overflow usually have answers.
+
+4. **Try the fix.** If you find a command that looks right, go back to your terminal (`Super+1`) and try it.
+
+5. **Ask for help if you are still stuck after 15 minutes.** Tell your instructor what you were trying to do, the exact error message, and what you already tried. That gives them everything they need to help you quickly.
+
+This process works for every error on every computer. Once you know it, you do not need someone to solve every problem for you.
+
+---
+
 ## What Comes Next
 
-You now know how to move around your machine. You can open terminals, switch workspaces, open Firefox, navigate folders, and read files.
+You now know how to move around your machine. You can open terminals, switch workspaces, open Firefox, navigate folders, and read files. You also know what to do when something goes wrong.
 
 Everything else you learn at the dojo builds on these basics. When you create your first coding project, you will use `cd` to go into it. When you edit a file, you will use the terminal to open it. When you need to look something up, you will switch to Firefox on workspace 4.
 

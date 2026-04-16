@@ -310,7 +310,37 @@ You are now in the dojo. Write a failing test. Watch it go red. Make it pass. Wa
 
 ---
 
-## If Something Goes Wrong
+## How to Fix Problems
+
+Before you look at specific fixes below, learn this process. It is the same process every time, for every error, on every computer. Once you know it, you can solve problems nobody has written a guide for.
+
+### Step 1: Read the error
+
+When something goes wrong, the terminal prints an error message. It is usually the last few lines on the screen, often in red or after the word "error" or "failed". Read it. Do not panic. Do not immediately try something else. Just read what it says.
+
+### Step 2: Copy the error exactly
+
+Select the error text in your terminal. On most terminals, you can select text by clicking and dragging with the mouse, then copy it with `Ctrl+Shift+C` (not `Ctrl+C`, which does something else in the terminal).
+
+If you cannot copy it, type it out word for word. Do not paraphrase. The exact wording matters because that is what other people have searched for before you.
+
+### Step 3: Search for it
+
+Open Firefox (`Super+4`, then `Super+d`, type `firefox`). Go to google.com. Paste the error message into the search bar. Add the word "debian" or "linux" to narrow the results.
+
+Look at the first few results. Sites like Stack Overflow, Ask Ubuntu, and the Debian forums usually have answers. Read the answers that got the most votes. Often the fix is one or two commands.
+
+### Step 4: Try the fix
+
+If you find a command that looks like a fix, try it. If it works, write down what happened and what you did in your own notes. If it does not work, go back to step 3 and look at the next result.
+
+### Step 5: Ask for help if you are still stuck
+
+If you have spent more than 15 minutes and nothing has worked, send a message to your instructor. Include: what you were trying to do, the exact error message, and what you already tried. This gives them everything they need to help you quickly.
+
+---
+
+## Common Problems and Fixes
 
 ### The laptop boots to a black screen with no login prompt
 
@@ -326,15 +356,31 @@ sudo nmtui
 
 If it still does not work, connect an ethernet cable and run `sudo apt install firmware-iwlwifi`, then reboot.
 
-### startx gives an error
+### startx says something about "console users" or "not on a console"
 
-Make sure i3 is installed:
+This means Debian is not allowing your user to start the graphical environment. Run this:
+
+```bash
+sudo sed -i 's/allowed_users=console/allowed_users=anybody/' /etc/X11/Xwrapper.config
+```
+
+Then try `startx` again. If the file does not exist, run:
+
+```bash
+sudo apt install -y xserver-xorg-legacy
+```
+
+Then run the `sed` command above, then `startx`.
+
+### startx gives a different error
+
+Make sure i3 and Xorg are installed:
 
 ```bash
 sudo apt install -y i3 xorg xinit
 ```
 
-Then try `startx` again.
+Then try `startx` again. If it still fails, read the error message and follow the troubleshooting steps above. The error log is also saved at `/var/log/Xorg.0.log` if you need more detail.
 
 ### The setup script fails partway through
 

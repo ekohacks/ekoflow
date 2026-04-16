@@ -93,6 +93,9 @@ sudo apt install -y \
   i3lock \
   dmenu
 
+# Allow any user to start X (fixes "only console users" error on Debian 13)
+sudo sed -i 's/allowed_users=console/allowed_users=anybody/' /etc/X11/Xwrapper.config 2>/dev/null || true
+
 # Terminal and editor
 sudo apt install -y \
   alacritty \
