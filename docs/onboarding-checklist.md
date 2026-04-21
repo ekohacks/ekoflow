@@ -1,4 +1,4 @@
-# Ekohacks Student Onboarding Checklist
+u# Ekohacks Student Onboarding Checklist
 
 Use this checklist every time a new student joins a dojo session. Work through it in order. Do not skip steps. Tick each item when done.
 
@@ -6,7 +6,7 @@ Use this checklist every time a new student joins a dojo session. Work through i
 
 ## One Week Before the Session
 
-- [ ] Confirm student name, email, and GitHub username
+- [x] Confirm student name, email, and GitHub username
 - [ ] Send welcome email using the template in ops repo at templates/welcome-email.md
 - [ ] Send logistics email (date, time, location, what to bring) using templates/logistics-email.md
 - [ ] Ask if they have a laptop or need one provided
@@ -21,15 +21,15 @@ Use this checklist every time a new student joins a dojo session. Work through i
 
 ## One Day Before the Session
 
-- [ ] Charge all provided laptops to 100%
-- [ ] Test wifi on every machine (open Firefox, load github.com)
-- [ ] Run `sudo apt update` on every machine to ensure packages are current
+- [x] Charge all provided laptops to 100%
+- [x] Test wifi on every machine (open Firefox, load github.com)
+- [x] Run `sudo apt update` on every machine to ensure packages are current
 - [ ] Run `dojo-start` on every machine to confirm the environment is working
 - [ ] Run `npx vitest run` in a test project on every machine to confirm vitest works
 - [ ] Print or display the session schedule
 - [ ] Print the Neovim cheat sheet (one per student)
 - [ ] Print the i3 cheat sheet (one per student)
-- [ ] Confirm the room or space is ready (power sockets, seating, internet)
+- [x] Confirm the room or space is ready (power sockets, seating, internet)
 - [ ] Test the wifi bandwidth: at least 5 Mbps per student
 
 ---
@@ -48,8 +48,9 @@ Follow the Linux Install Guide. These are the key steps and common pitfalls.
 
 ### During Install
 
-- [ ] Boot from Debian 13 USB stick
-- [ ] Choose "Install" (text mode)
+- [x] Boot from Debian 13 USB stick
+- [x
+] Choose "Install" (text mode)
 - [ ] Language: English
 - [ ] Keyboard: match the physical keyboard (check the key left of 1)
 - [ ] Network: connect to wifi during install
@@ -69,7 +70,7 @@ Follow the Linux Install Guide. These are the key steps and common pitfalls.
 - [ ] Clone dojo setup: `git clone https://github.com/ekohacks/dojo-setup.git`
 - [ ] Run setup script: `cd dojo-setup && chmod +x ekohacks-dojo-setup.sh && ./ekohacks-dojo-setup.sh`
 - [ ] Reboot: `sudo reboot`
-- [ ] Log in and run `startx`
+- [x] Log in and run `startx`
 - [ ] Open terminal (Super + Enter)
 - [ ] Verify dojo-start banner appears
 - [ ] Run `dojo-init test-kata` and confirm vitest runs
@@ -79,13 +80,13 @@ Follow the Linux Install Guide. These are the key steps and common pitfalls.
 ### Verification
 
 - [ ] i3 starts with Super + Enter opening Alacritty
-- [ ] Neovim opens with `nvim`
-- [ ] tmux starts with `tmux`
+- [x] Neovim opens with `nvim`
+- [x] tmux starts with `tmux`
 - [ ] TDD layout works (Ctrl+a T in tmux)
 - [ ] Vitest runs tests
-- [ ] Git is configured with student's name and email
+- [x] Git is configured with student's name and email
 - [ ] Firefox opens with Super+d then typing "firefox"
-- [ ] Wifi reconnects after reboot
+- [x] Wifi reconnects after reboot
 - [ ] Battery indicator shows in i3 status bar
 - [ ] Brightness keys work (on EliteBooks)
 - [ ] Volume keys work (on EliteBooks)
