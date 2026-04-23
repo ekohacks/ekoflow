@@ -15,13 +15,13 @@
 
 
   Where I Got Stuck
- .I got stuck trying to make a pull request from myterminal yesterday.
+ .I got stuck trying to make a pull request from my terminal yesterday.
  .I tried all commands from the documents and internet.
-Solved?(yes):
+  Solved?(yes):
 
   What I Learned
 
- .I learned how to what file,directory holds my current work.
+ .I learned how to know what file,directory holds my current work.
  
   What I Am Doing Tommorrow
  
