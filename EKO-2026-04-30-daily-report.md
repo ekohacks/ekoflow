@@ -14,7 +14,7 @@
 
    Where I Got Stucked
   . I got stuck in week 3 and i'm still awaiting your feedback.
-  . I planning a scheduled time for the weekly report.
+  . I made planning a scheduled time for the weekly report.
   . Not yet solved.
 
    What I Learned
