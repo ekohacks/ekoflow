@@ -1,7 +1,7 @@
 ## Weekly summary
    Name:**Abayomi Oyebode Samuel**
    Week:(End of week 3 of 12)
-   Date:**2026-05-03**
+   Date:**2026-05-04**
  
    **What I Did** 
   .I did my daily reports,while practising my weekly reports.

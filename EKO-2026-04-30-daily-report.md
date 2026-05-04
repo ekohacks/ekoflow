@@ -21,4 +21,5 @@
   .I learned to always create a new branch for all reports.
 
    What I Am Doing Tomorrow
-  .I am going over week 3, again incase i get feedback or any other recent development from boss and colleagues.
+  .I am going over week 3, again incase i get feedback or any other recent development from boss and colleagues
+
