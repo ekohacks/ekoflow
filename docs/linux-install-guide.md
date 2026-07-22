@@ -1,10 +1,10 @@
 # Setting Up Your Dojo Machine
 
-Right now your laptop runs Windows. It uses over 7GB of RAM just to show you a desktop. Most of that memory goes to things you never asked for: background services, telemetry, pre-installed apps, visual effects. Your machine is working hard, but not for you.
+Right now your laptop runs Windows or macOS. Either way it uses most of its 8GB of RAM just to show you a desktop. Most of that memory goes to things you never asked for: background services, telemetry, preinstalled apps, visual effects. Your machine is working hard, but not for you.
 
 After this guide, your laptop will use about 200MB of RAM at idle. Everything you removed was something you did not need. Everything that remains is something you chose. That is the point.
 
-This takes about 45 minutes. You will need a USB stick (at least 1GB) and a wifi connection.
+This takes about 45 minutes. You will need a USB stick (at least 1GB) and a wifi connection. If your machine is the MacBook, you will also need a phone that can do USB tethering or an ethernet adapter, because the MacBook's wifi only starts working once setup completes. Part 5 explains what to do.
 
 ---
 
@@ -19,6 +19,7 @@ This process erases Windows completely. Everything on your laptop will be gone. 
 - A USB stick, at least 1GB, that you do not mind erasing
 - Another device (phone or another computer) to read this guide while your laptop is being set up
 - Your wifi network name and password written down on paper
+- MacBook only: a phone with a USB cable for tethering, or an ethernet adapter
 
 ---
 
@@ -58,13 +59,19 @@ Download balenaEtcher from https://etcher.balena.io. Open it. Click "Flash from 
 
 ## Part 3: Changing Your Laptop's BIOS Settings
 
+### On the MacBook: nothing to change
+
+Macs do not have BIOS settings you need to touch. The firmware already knows how to boot from USB. When the time comes (Part 4), you will hold down a key while turning the machine on. Skip ahead to Part 4.
+
+### On the HP EliteBook
+
 Your laptop has a tiny program built into it called the BIOS. It runs before anything else: before Windows, before Linux, before anything. The BIOS decides what to boot from and how the hardware behaves.
 
 You need to change three things in the BIOS so your laptop will start from the USB stick and let Linux run.
 
 Turn off your laptop completely. Not sleep, not restart. Shut it down fully.
 
-Turn it on and immediately start pressing **F10** repeatedly. You will enter a screen with old-fashioned blue and grey menus. That is the BIOS. It is supposed to look like that.
+Turn it on and immediately start pressing **F10** repeatedly. You will enter a screen with old fashioned blue and grey menus. That is the BIOS. It is supposed to look like that.
 
 ### What to change and why
 
@@ -88,9 +95,15 @@ Press **F10** to save and exit. The laptop restarts.
 
 ## Part 4: Booting From the USB
 
+### On the MacBook
+
+Turn off the laptop. Plug in the USB stick. Turn it on while holding down the **Option** key (also labelled alt) and keep holding until a row of drive icons appears. Use the arrow keys to pick the one called **EFI Boot** and press Enter. The Debian installer appears.
+
+### On the HP EliteBook
+
 Turn off your laptop. Plug in the USB stick. Turn it on.
 
-If you set the boot order correctly, the Debian installer will appear. If Windows starts instead, turn the laptop off and try again. This time press **F9** during startup. That opens a one-time boot menu where you can manually select the USB stick.
+If you set the boot order correctly, the Debian installer will appear. If Windows starts instead, turn the laptop off and try again. This time press **F9** during startup. That opens a one time boot menu where you can manually select the USB stick.
 
 ---
 
@@ -112,9 +125,11 @@ Select your country. This sets your time zone and the nearest download server.
 
 Look at the key to the left of the number 1. If it has a backtick and a not sign (¬), you have a British keyboard. If it has a backtick and a tilde (~), you have a US keyboard. Getting this wrong means some keys will type the wrong character. You can always change it later, but it is easier to get it right now.
 
-### Network → Connect to your wifi
+### Network → Connect to the internet
 
-The installer will show you a list of wifi networks. Find yours and type the password. If your wifi does not appear, you may need to connect an ethernet cable for the installation. This is rare with the HP EliteBook 840r G4 on Debian 13, but it can happen.
+On the **EliteBook**: the installer will show you a list of wifi networks. Find yours and type the password. If your wifi does not appear, you may need to connect an ethernet cable for the installation. This is rare with the HP EliteBook 840r G4 on Debian 13, but it can happen.
+
+On the **MacBook**: your wifi will not appear, and that is expected. The wifi chip in this MacBook needs a driver that can only be installed later, by the setup script. Plug your phone into the laptop with a USB cable and switch on USB tethering (on Android: Settings, then Network, then Hotspot and tethering). The installer sees the phone as a wired connection and carries on normally. An ethernet adapter works the same way. Keep the phone or adapter connected until the setup script finishes in Part 8.
 
 Why does the installer need internet? Because the netinst image is minimal. It downloads the software you select during installation. No internet, no software.
 
@@ -192,23 +207,19 @@ You are now logged in. You see a blinking cursor. This is your terminal.
 
 ---
 
-## Part 7: Connecting to Wifi
+## Part 7: Checking Your Internet
 
-Your wifi is probably not connected yet. Type:
-
-```bash
-sudo nmtui
-```
-
-Type your password when asked. A blue menu appears. Select **Activate a connection**. Find your wifi network, select it, type the password. Press Escape twice to leave.
-
-Test it:
+The connection you used during installation normally carries over to the installed system, so you are probably already online. Check:
 
 ```bash
 ping -c 3 google.com
 ```
 
-You should see three lines with times in milliseconds. That means your internet works. If you see "Network is unreachable", try `sudo nmtui` again and make sure you selected the right network.
+You should see three lines with times in milliseconds. That means your internet works.
+
+On the **MacBook** this works because your phone or adapter is still plugged in. Leave it that way until the setup script finishes. The script installs the wifi driver, and wifi works on its own after the reboot in Part 9.
+
+If you see "Network is unreachable", the simplest fix on either machine is USB tethering from a phone, exactly as described in Part 5. It gives the machine internet for the setup script, and the script installs the proper wifi tools. After setup you manage wifi with `nmtui`, a tool the script installs. It is not on the machine yet, so do not look for it now.
 
 ---
 
@@ -222,16 +233,16 @@ Install git (a tool for downloading and tracking code):
 sudo apt install -y git
 ```
 
-Download the dojo setup:
+Download the Ekohacks repository (the setup script lives inside it):
 
 ```bash
-git clone https://github.com/ekohacks/dojo-setup.git
+git clone https://github.com/ekohacks/ekoflow.git
 ```
 
-Go into the folder:
+Go into the scripts folder:
 
 ```bash
-cd dojo-setup
+cd ekoflow/scripts
 ```
 
 Make the script runnable:
@@ -246,11 +257,11 @@ Run it:
 ./ekohacks-dojo-setup.sh
 ```
 
-It will ask for your password once. After that it runs for 10 to 15 minutes. You will see a lot of text scrolling past. That is every tool being downloaded, installed, and configured. Do not close the terminal or turn off the laptop.
+The script first checks it can reach the internet and tells you exactly what to do if it cannot. It then prints which hardware it detected (EliteBook or MacBook) and asks for your password. Partway through it also asks for your name and email, which git stamps onto every piece of work you save, so stay nearby rather than walking away. In total it runs for 10 to 15 minutes. You will see a lot of text scrolling past. That is every tool being downloaded, installed, and configured. Do not close the terminal or turn off the laptop.
 
-When it finishes you will see "SETUP COMPLETE" with next steps.
+When it finishes you will see "SETUP COMPLETE" with next steps. On the MacBook it also confirms that the wifi driver is installed and that you can unplug the phone or adapter after the reboot.
 
-What just happened? The script installed a window manager (i3), a terminal (Alacritty), a text editor (Neovim), a test runner (vitest), Node.js for JavaScript, Firefox for browsing, and a dozen other tools, all configured to work together. It also set up keyboard shortcuts, shell commands, and a TDD workflow. Everything you need, nothing you do not.
+What just happened? The script installed a window manager (i3), a terminal (Alacritty), a text editor (Neovim), a test runner (vitest), Node.js for JavaScript, Firefox for browsing, and a dozen other tools, all configured to work together. It also set up keyboard shortcuts, shell commands, a TDD workflow, and the pairing tools used in XP sessions. Everything you need, nothing you do not.
 
 ---
 
@@ -270,7 +281,7 @@ startx
 
 You will see a mostly black screen with a thin bar at the top. That is i3. There is nothing wrong. This is what your workspace looks like.
 
-Press **Super + Enter** to open a terminal. The Super key is the one with the Windows logo on your keyboard.
+Press **Super + Enter** to open a terminal. The Super key is the one with the Windows logo on the EliteBook, and the Command key on the MacBook.
 
 You will see the Ekohacks dojo banner with your workspace info and available commands.
 
@@ -286,7 +297,7 @@ When you are comfortable with the basics, create your first project:
 dojo-init my-first-kata
 ```
 
-This creates a folder with a test file, installs the test runner, and makes a first git commit. Go into it:
+This creates a folder with a failing test already inside, wired to the test runner, and saves it as your first git commit. Go into it:
 
 ```bash
 cd my-first-kata
@@ -303,10 +314,10 @@ Then press **Ctrl+a** followed by **T** (capital T, so Ctrl+a then Shift+t). Thi
 In the left side, type:
 
 ```bash
-nvim test/example.test.js
+nvim test/kata.test.js
 ```
 
-You are now in the dojo. Write a failing test. Watch it go red. Make it pass. Watch it go green. Clean it up. Commit. That is the cycle.
+You are now in the dojo. The scaffold already gives you one failing test. Watch it go red. Make it pass. Watch it go green. Clean it up. Commit. Then write the next failing test. That is the cycle.
 
 ---
 
@@ -346,7 +357,7 @@ If you have spent more than 15 minutes and nothing has worked, send a message to
 
 Wait 30 seconds. Sometimes the display takes a moment. If nothing appears, hold the power button for 10 seconds to force it off, then turn it on again.
 
-### Wifi does not appear in nmtui
+### Wifi does not work after setup (EliteBook)
 
 ```bash
 sudo modprobe iwlwifi
@@ -354,7 +365,21 @@ sudo systemctl restart NetworkManager
 sudo nmtui
 ```
 
-If it still does not work, connect an ethernet cable and run `sudo apt install firmware-iwlwifi`, then reboot.
+If it still does not work, connect an ethernet cable or tether a phone and run `sudo apt install firmware-iwlwifi`, then reboot.
+
+### Wifi does not work after setup (MacBook)
+
+The wifi driver is built during setup and loads at the reboot. Make sure the script actually reached "SETUP COMPLETE" and that you have rebooted since. Then check:
+
+```bash
+sudo modprobe wl
+sudo systemctl restart NetworkManager
+sudo nmtui
+```
+
+If wifi still does not appear, plug the phone or adapter back in and run the setup script again. It is safe to run more than once, and the log at `~/ekohacks-setup.log` will show what went wrong with the driver build.
+
+Remember that `nmtui` only exists after the setup script has run. Before that, the machine gets its internet from the connection you used during installation.
 
 ### startx says something about "console users" or "not on a console"
 
@@ -415,6 +440,10 @@ Your laptop is running a purpose-built environment for learning to code. Here is
 | ranger | Browses files from the terminal |
 | calcurse | Calendar and scheduling |
 | sc-im | Spreadsheet in the terminal |
+| neomutt | Email in the terminal |
+| dojo-pair | Shares your terminal with a partner for pairing |
+| dojo-rotate | Chimes when the pair should swap driver and navigator |
+| tmate | Pairing with someone who is not in the room |
 | TLP | Manages your battery |
 
 Idle RAM: about 200MB. Available for your work: about 7.8GB.

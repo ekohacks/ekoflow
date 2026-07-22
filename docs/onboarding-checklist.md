@@ -53,7 +53,7 @@ Follow the Linux Install Guide. These are the key steps and common pitfalls.
 ] Choose "Install" (text mode)
 - [ ] Language: English
 - [ ] Keyboard: match the physical keyboard (check the key left of 1)
-- [ ] Network: connect to wifi during install
+- [ ] Network: connect to wifi during install (MacBook: USB tethering or ethernet adapter, wifi works only after setup)
 - [ ] Hostname: ekohacks
 - [ ] Root password: leave blank (gives sudo to normal user)
 - [ ] Username: student's first name, lowercase, no spaces
@@ -64,11 +64,10 @@ Follow the Linux Install Guide. These are the key steps and common pitfalls.
 ### After Install
 
 - [ ] Log in as the new user
-- [ ] Connect wifi: `sudo nmtui`
-- [ ] Test internet: `ping -c 3 google.com`
+- [ ] Test internet (the install connection carries over, nmtui does not exist yet): `ping -c 3 google.com`
 - [ ] Install git: `sudo apt install -y git`
-- [ ] Clone dojo setup: `git clone https://github.com/ekohacks/dojo-setup.git`
-- [ ] Run setup script: `cd dojo-setup && chmod +x ekohacks-dojo-setup.sh && ./ekohacks-dojo-setup.sh`
+- [ ] Clone the repo: `git clone https://github.com/ekohacks/ekoflow.git`
+- [ ] Run setup script: `cd ekoflow/scripts && chmod +x ekohacks-dojo-setup.sh && ./ekohacks-dojo-setup.sh`
 - [ ] Reboot: `sudo reboot`
 - [x] Log in and run `startx`
 - [ ] Open terminal (Super + Enter)
@@ -88,8 +87,9 @@ Follow the Linux Install Guide. These are the key steps and common pitfalls.
 - [ ] Firefox opens with Super+d then typing "firefox"
 - [x] Wifi reconnects after reboot
 - [ ] Battery indicator shows in i3 status bar
-- [ ] Brightness keys work (on EliteBooks)
-- [ ] Volume keys work (on EliteBooks)
+- [ ] Brightness keys work
+- [ ] Volume keys work
+- [ ] MacBook only: wifi works without the tether after reboot
 
 ---
 
@@ -113,7 +113,7 @@ Walk them through these steps. Do not do it for them. Stand behind them and tell
 3. "Read the banner. It tells you where you are and what commands you have."
 4. "Type `dojo-init hello-world` and press Enter. This creates your first project."
 5. "Type `cd hello-world` and press Enter."
-6. "Type `nvim test/example.test.js` and press Enter. This opens your first test file."
+6. "Type `nvim test/kata.test.js` and press Enter. This opens your first test file."
 7. "Press the letter i. Now you can type. You are in insert mode."
 8. "Press Escape. Now you cannot type. You are in normal mode."
 9. "Type `:q!` and press Enter. You just quit Neovim without saving."
@@ -146,7 +146,7 @@ sudo systemctl restart NetworkManager
 sudo nmtui
 ```
 
-If it still fails, check if the machine has an Intel wifi card: `lspci | grep Network`. If it says Intel, the driver should work. Reboot and try again. If it is a different brand, search for the Debian driver for that card.
+If it still fails, check what wifi card the machine has: `lspci | grep Network`. The EliteBooks have Intel cards and use the `iwlwifi` module above. The MacBook has a Broadcom card and uses `wl` instead: `sudo modprobe wl`. If `wl` is missing, rerun the setup script with a tethered phone or ethernet adapter connected, since the driver is built during setup.
 
 ### startx gives an error about no screens found
 

@@ -104,6 +104,33 @@ fi
 echo ""
 
 # ------------------------------------------------------------
+# NETWORK CHECK (everything below needs the Debian mirrors)
+# ------------------------------------------------------------
+
+network_ok() {
+  ping -c 1 -W 5 deb.debian.org >/dev/null 2>&1 && return 0
+  timeout 5 bash -c 'exec 3<>/dev/tcp/deb.debian.org/80' >/dev/null 2>&1 && return 0
+  return 1
+}
+
+if ! network_ok; then
+  echo "ERROR: Cannot reach the Debian mirrors, so nothing can be installed."
+  echo ""
+  if [ "$APPLE" -eq 1 ]; then
+    echo "  This MacBook's wifi only starts working after setup completes,"
+    echo "  because the Broadcom driver has to be downloaded first."
+    echo ""
+    echo "  Connect the machine another way, then rerun this script:"
+    echo "    - USB tethering from a phone (plug it in, enable tethering), or"
+    echo "    - a USB or Thunderbolt ethernet adapter"
+  else
+    echo "  Check the network connection, then rerun this script."
+  fi
+  echo ""
+  exit 1
+fi
+
+# ------------------------------------------------------------
 # 1. SYSTEM PACKAGES
 # ------------------------------------------------------------
 echo "──────────────────────────────────────────────"
@@ -177,6 +204,10 @@ if [ "$APPLE" -eq 1 ]; then
   # Broadcom BCM4331 (MacBook Pro Retina Mid 2012) needs the wl driver,
   # built through dkms against the running kernel
   sudo apt install -y linux-headers-amd64 broadcom-sta-dkms
+  echo ""
+  echo "  Broadcom wifi driver built and installed."
+  echo "  Wifi on this MacBook works from the next reboot onwards."
+  echo ""
 else
   # Intel wifi (EliteBook 840r G4)
   sudo apt install -y firmware-iwlwifi
@@ -1131,5 +1162,10 @@ echo "  ║                                           ║"
 echo "  ║   Remember: Red. Green. Refactor.         ║"
 echo "  ╚═══════════════════════════════════════════╝"
 echo ""
+if [ "$APPLE" -eq 1 ]; then
+  echo "  MacBook note: the wifi driver is installed, so after the reboot"
+  echo "  wifi is native and the tether or adapter is no longer needed."
+  echo ""
+fi
 echo "  Full log saved to: $LOG_FILE"
 echo ""

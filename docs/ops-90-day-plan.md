@@ -346,7 +346,7 @@ You have been using this machine for two months. You know how to use the tools. 
 **Tasks:**
 
 1. Open the setup script:
-   - `nvim ekohacks-dojo-setup.sh`
+   - `nvim ekoflow/scripts/ekohacks-dojo-setup.sh`
 2. Read it from top to bottom. For each section (separated by comments), write one sentence explaining what it does and why. If you can explain it in your own words, you understand it. If you cannot, you found what you need to learn. Save your notes:
    - `nvim docs/setup-explained.md`
 3. When you finish, commit your explanation file.
@@ -381,7 +381,7 @@ Reading the script is different from running it on a real machine with real prob
 1. Get a second laptop (borrow one, or use a virtual machine).
 2. Follow the Linux Install Guide from Part 1. Do every step yourself. Your manager watches but does not help unless you are stuck for more than ten minutes. The reason for the ten minute rule: struggling with a problem teaches you. Being told the answer does not. But struggling for too long without progress is just frustration, not learning.
 3. Run the setup script on the new machine:
-   - `cd dojo-setup && chmod +x ekohacks-dojo-setup.sh && ./ekohacks-dojo-setup.sh`
+   - `cd ekoflow/scripts && chmod +x ekohacks-dojo-setup.sh && ./ekohacks-dojo-setup.sh`
 4. Verify each of these works on the new machine:
    - [ ] `startx` starts i3
    - [ ] `Super+Enter` opens Alacritty
