@@ -15,6 +15,7 @@
 #    - Installs tmux with TDD split layout
 #    - Installs Node.js 22 and vitest
 #    - Configures git with TDD workflow aliases
+#    - Installs XP pairing tools (shared tmux over ssh, tmate, rotation chime)
 #    - Sets up Alacritty terminal with Ekohacks colour scheme
 #    - Creates shell aliases for daily dojo work
 #
@@ -143,6 +144,15 @@ sudo apt install -y \
   pass \
   entr
 
+# XP pairing tools (shared tmux over ssh, remote pairing, rotation chime)
+sudo apt install -y \
+  openssh-server \
+  tmate \
+  sound-theme-freedesktop
+
+# ssh lets a pair partner join a shared tmux session on this machine
+sudo systemctl enable --now ssh
+
 echo "[1/9] Done."
 
 # ------------------------------------------------------------
@@ -208,10 +218,10 @@ git config --global alias.ci "commit -v"
 git config --global alias.lg "log --oneline --graph --all --decorate"
 git config --global alias.last "log -1 --stat"
 
-# TDD specific aliases (refuse an empty commit message)
-git config --global alias.green '!f() { if [ -z "${1:-}" ]; then echo "usage: git green <message>"; exit 1; fi; git add -A && git commit -m "green: $1"; }; f'
-git config --global alias.refactor '!f() { if [ -z "${1:-}" ]; then echo "usage: git refactor <message>"; exit 1; fi; git add -A && git commit -m "refactor: $1"; }; f'
-git config --global alias.red '!f() { if [ -z "${1:-}" ]; then echo "usage: git red <message>"; exit 1; fi; git add -A && git commit -m "red: $1"; }; f'
+# TDD specific aliases (refuse an empty message, credit a pair partner when DOJO_PAIR is set)
+git config --global alias.green '!f() { if [ -z "${1:-}" ]; then echo "usage: git green <message>"; exit 1; fi; git add -A && if [ -n "${DOJO_PAIR:-}" ]; then git commit -m "green: $1" -m "Co-authored-by: $DOJO_PAIR"; else git commit -m "green: $1"; fi; }; f'
+git config --global alias.refactor '!f() { if [ -z "${1:-}" ]; then echo "usage: git refactor <message>"; exit 1; fi; git add -A && if [ -n "${DOJO_PAIR:-}" ]; then git commit -m "refactor: $1" -m "Co-authored-by: $DOJO_PAIR"; else git commit -m "refactor: $1"; fi; }; f'
+git config --global alias.red '!f() { if [ -z "${1:-}" ]; then echo "usage: git red <message>"; exit 1; fi; git add -A && if [ -n "${DOJO_PAIR:-}" ]; then git commit -m "red: $1" -m "Co-authored-by: $DOJO_PAIR"; else git commit -m "red: $1"; fi; }; f'
 
 # Check if user has set their name
 if [ -z "$(git config --global user.name 2>/dev/null)" ]; then
@@ -766,18 +776,46 @@ alias ga='git add'
 alias gc='git commit -v'
 alias gp='git push'
 
-# TDD commit helpers: same prefixes as the git aliases, refuse an empty message
+# TDD commit helpers: same prefixes as the git aliases, refuse an empty message.
+# When pairing-with has set a partner, commits credit both of you.
+_dojo_commit() {
+  local prefix="$1" msg="$2"
+  if [ -n "${DOJO_PAIR:-}" ]; then
+    git add -A && git commit -m "$prefix: $msg" -m "Co-authored-by: $DOJO_PAIR"
+  else
+    git add -A && git commit -m "$prefix: $msg"
+  fi
+}
 green() {
   if [ -z "${1:-}" ]; then echo "usage: green 'what you made pass'"; return 1; fi
-  git add -A && git commit -m "green: $1"
+  _dojo_commit green "$1"
 }
 red() {
   if [ -z "${1:-}" ]; then echo "usage: red 'the test you wrote'"; return 1; fi
-  git add -A && git commit -m "red: $1"
+  _dojo_commit red "$1"
 }
 refactor() {
   if [ -z "${1:-}" ]; then echo "usage: refactor 'what you cleaned up'"; return 1; fi
-  git add -A && git commit -m "refactor: $1"
+  _dojo_commit refactor "$1"
+}
+
+# XP pairing credit: tell the shell who you are pairing with
+pairing-with() {
+  if [ -z "${1:-}" ]; then
+    if [ -n "${DOJO_PAIR:-}" ]; then
+      echo "Pairing with: $DOJO_PAIR"
+    else
+      echo "usage: pairing-with 'Sam Coleson <sam@example.com>'"
+    fi
+    return 0
+  fi
+  export DOJO_PAIR="$*"
+  echo "Commits will credit: $DOJO_PAIR"
+}
+
+pairing-solo() {
+  unset DOJO_PAIR
+  echo "Back to solo commits."
 }
 
 # Aliases: navigation
@@ -832,6 +870,14 @@ dojo-start() {
   echo "    red       commit a failing test (red 'describe the behaviour')"
   echo "    green     commit passing code (green 'add player X logic')"
   echo "    refactor  commit a clean up (refactor 'extract helper')"
+  echo ""
+  echo "  Pairing (XP):"
+  echo "    dojo-pair host          share this terminal on the LAN"
+  echo "    dojo-pair join <ip>     join a partner's shared session"
+  echo "    pairing-with 'Name <email>'   credit your partner on commits"
+  echo "    pairing-solo            stop crediting a partner"
+  echo "    dojo-rotate 10          chime every 10 minutes to swap roles"
+  echo "    tmate                   pair over the internet"
   echo ""
   echo "  Tmux TDD layout:"
   echo "    tmux then Ctrl+a T"
@@ -911,6 +957,74 @@ echo "Created: $output"
 MD2PPTX_EOF
 chmod +x "$DOJO_BIN/md2pptx"
 echo "Installed md2pdf, md2docx, md2pptx to $DOJO_BIN"
+
+# XP pairing: shared tmux session over the LAN
+cat > "$DOJO_BIN/dojo-pair" << 'PAIR_EOF'
+#!/usr/bin/env bash
+# Shared tmux pairing session over the LAN
+set -euo pipefail
+
+usage() {
+  echo "usage: dojo-pair host              start a shared session and show the join command"
+  echo "       dojo-pair join <ip> [user]  join a partner's session over ssh"
+  exit 1
+}
+
+[ $# -ge 1 ] || usage
+
+case "$1" in
+  host)
+    ip="$(hostname -I 2>/dev/null | awk '{print $1}')"
+    echo ""
+    echo "  Shared session starting. Your partner joins with:"
+    echo ""
+    echo "    dojo-pair join ${ip:-<this-machine-ip>} $USER"
+    echo ""
+    echo "  Both of you type in the same panes. Talk while you type."
+    echo ""
+    exec tmux new-session -A -s pair
+    ;;
+  join)
+    [ $# -ge 2 ] || usage
+    host_ip="$2"
+    remote_user="${3:-$USER}"
+    exec ssh -t "$remote_user@$host_ip" "tmux new-session -A -s pair"
+    ;;
+  *)
+    usage
+    ;;
+esac
+PAIR_EOF
+chmod +x "$DOJO_BIN/dojo-pair"
+
+# XP pairing: rotation chime for driver and navigator swaps
+cat > "$DOJO_BIN/dojo-rotate" << 'ROTATE_EOF'
+#!/usr/bin/env bash
+# Chime every N minutes so the pair swaps driver and navigator
+set -euo pipefail
+
+minutes="${1:-10}"
+case "$minutes" in
+  ''|0|*[!0-9]*)
+    echo "usage: dojo-rotate [minutes]"
+    echo "example: dojo-rotate 10"
+    exit 1
+    ;;
+esac
+
+chime="/usr/share/sounds/freedesktop/stereo/complete.oga"
+echo "Rotation timer running: swap every $minutes minutes. Ctrl+C to stop."
+
+rotation=0
+while true; do
+  sleep "$((minutes * 60))"
+  rotation=$((rotation + 1))
+  echo "$(date +%H:%M)  Rotation $rotation: swap driver and navigator."
+  paplay "$chime" 2>/dev/null || printf '\a'
+done
+ROTATE_EOF
+chmod +x "$DOJO_BIN/dojo-rotate"
+echo "Installed dojo-pair and dojo-rotate to $DOJO_BIN"
 
 # Make sure ~/.local/bin is in PATH
 if ! grep -q 'HOME/.local/bin' "$HOME/.bashrc" 2>/dev/null; then
