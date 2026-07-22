@@ -2,7 +2,10 @@
 # ============================================================
 #  EKOHACKS DOJO MACHINE SETUP
 #  Base: Debian 13 "Trixie" Minimal (net install)
-#  Target: HP EliteBook 840r G4 (i5-8250U, 8GB RAM)
+#  Targets: HP EliteBook 840r G4 (i5-8250U, 8GB RAM)
+#           MacBook Pro Retina Mid 2012 (i7-3615QM, 8GB RAM)
+#  Hardware differences (wifi driver, HiDPI panel) are detected
+#  automatically, so the same script provisions both fleets.
 #  Purpose: Transform bare Debian into a dojo ready machine
 #
 #  Usage (after Debian 13 minimal install):
@@ -53,6 +56,32 @@ LOG_FILE="$HOME/ekohacks-setup.log"
 # Log everything
 exec > >(tee -a "$LOG_FILE") 2>&1
 
+# ------------------------------------------------------------
+# HARDWARE DETECTION (EliteBook vs MacBook)
+# ------------------------------------------------------------
+
+VENDOR="$(cat /sys/class/dmi/id/sys_vendor 2>/dev/null || echo unknown)"
+APPLE=0
+case "$VENDOR" in
+  Apple*) APPLE=1 ;;
+esac
+
+# An internal panel 2560 or wider needs HiDPI scaling (Retina and friends)
+HIDPI=0
+for modes in /sys/class/drm/card*-eDP-*/modes /sys/class/drm/card*-LVDS-*/modes; do
+  [ -r "$modes" ] || continue
+  native=""
+  read -r native < "$modes" || true
+  width="${native%%x*}"
+  case "$width" in
+    ''|*[!0-9]*) continue ;;
+  esac
+  if [ "$width" -ge 2560 ]; then
+    HIDPI=1
+  fi
+  break
+done
+
 echo ""
 echo "  ╔═══════════════════════════════════════════╗"
 echo "  ║         EKOHACKS DOJO SETUP               ║"
@@ -64,6 +93,15 @@ echo "  ╚═══════════════════════
 echo ""
 echo "  Log file: $LOG_FILE"
 echo ""
+if [ "$APPLE" -eq 1 ]; then
+  echo "  Hardware: Apple detected (Broadcom wifi driver will be used)"
+else
+  echo "  Hardware: standard profile (Intel wifi firmware)"
+fi
+if [ "$HIDPI" -eq 1 ]; then
+  echo "  Display:  HiDPI panel detected (Retina scaling will be applied)"
+fi
+echo ""
 
 # ------------------------------------------------------------
 # 1. SYSTEM PACKAGES
@@ -71,6 +109,16 @@ echo ""
 echo "──────────────────────────────────────────────"
 echo "[1/9] Installing system packages..."
 echo "──────────────────────────────────────────────"
+
+# MacBooks need the proprietary Broadcom wl driver, which lives in the
+# non-free component that a minimal install does not enable
+if [ "$APPLE" -eq 1 ]; then
+  if [ -f /etc/apt/sources.list.d/debian.sources ]; then
+    sudo sed -i 's/^Components: .*/Components: main contrib non-free non-free-firmware/' /etc/apt/sources.list.d/debian.sources
+  elif [ -f /etc/apt/sources.list ]; then
+    sudo sed -i '/^deb /s/ main.*/ main contrib non-free non-free-firmware/' /etc/apt/sources.list
+  fi
+fi
 
 sudo apt update && sudo apt upgrade -y
 
@@ -115,15 +163,24 @@ sudo apt install -y \
   fonts-firacode \
   fonts-noto
 
-# Network and hardware (EliteBook 840r G4 specific)
+# Network and hardware
 # network-manager-gnome provides nm-applet, autostarted by i3
 sudo apt install -y \
   network-manager \
   network-manager-gnome \
-  firmware-iwlwifi \
   pulseaudio \
   pavucontrol \
   brightnessctl
+
+# Wifi driver depends on the machine
+if [ "$APPLE" -eq 1 ]; then
+  # Broadcom BCM4331 (MacBook Pro Retina Mid 2012) needs the wl driver,
+  # built through dkms against the running kernel
+  sudo apt install -y linux-headers-amd64 broadcom-sta-dkms
+else
+  # Intel wifi (EliteBook 840r G4)
+  sudo apt install -y firmware-iwlwifi
+fi
 
 # Browser
 sudo apt install -y \
@@ -573,11 +630,11 @@ mode "resize" {
 }
 bindsym $mod+r mode "resize"
 
-# Brightness (EliteBook 840r G4)
+# Brightness keys (EliteBook and MacBook both expose XF86 keys)
 bindsym XF86MonBrightnessUp exec brightnessctl set +10%
 bindsym XF86MonBrightnessDown exec brightnessctl set 10%-
 
-# Volume (EliteBook 840r G4)
+# Volume keys
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +5%
 bindsym XF86AudioLowerVolume exec pactl set-sink-volume @DEFAULT_SINK@ -5%
 bindsym XF86AudioMute exec pactl set-sink-mute @DEFAULT_SINK@ toggle
@@ -679,7 +736,8 @@ mkdir -p "$ALACRITTY_CONFIG"
 cat > "$ALACRITTY_CONFIG/alacritty.toml" << 'ALACRITTY_EOF'
 # ============================================================
 #  EKOHACKS ALACRITTY CONFIG
-#  Optimised for 14" 1920x1080 (EliteBook 840r G4)
+#  Sized for 14" 1920x1080 (EliteBook 840r G4)
+#  Retina panels scale automatically through Xft.dpi
 # ============================================================
 
 [font]
@@ -1034,7 +1092,17 @@ fi
 # ------------------------------------------------------------
 # STARTX CONFIG
 # ------------------------------------------------------------
+
+# HiDPI panels (MacBook Retina) get fontconfig scaling through Xft.dpi,
+# which i3, Alacritty and dmenu all honour, so font sizes stay unchanged
+if [ "$HIDPI" -eq 1 ]; then
+  cat > "$HOME/.Xresources" << 'XRES_EOF'
+Xft.dpi: 180
+XRES_EOF
+fi
+
 cat > "$HOME/.xinitrc" << 'XINITRC_EOF'
+[ -f "$HOME/.Xresources" ] && xrdb -merge "$HOME/.Xresources"
 exec i3
 XINITRC_EOF
 
