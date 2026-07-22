@@ -115,8 +115,10 @@ sudo apt install -y \
   fonts-noto
 
 # Network and hardware (EliteBook 840r G4 specific)
+# network-manager-gnome provides nm-applet, autostarted by i3
 sudo apt install -y \
   network-manager \
+  network-manager-gnome \
   firmware-iwlwifi \
   pulseaudio \
   pavucontrol \
@@ -132,6 +134,7 @@ sudo apt install -y \
   texlive-latex-base \
   texlive-fonts-recommended \
   texlive-latex-recommended \
+  texlive-xetex \
   ranger \
   neomutt \
   w3m \
@@ -171,11 +174,14 @@ if [ ! -d "$NVM_DIR" ]; then
   curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
 fi
 
+# nvm is not safe under set -u, so relax it while nvm runs
+set +u
 # shellcheck source=/dev/null
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 nvm install "$NODE_VERSION"
 nvm alias default "$NODE_VERSION"
+set -u
 
 # Only what the dojo needs
 npm install -g vitest typescript tsx
@@ -202,10 +208,10 @@ git config --global alias.ci "commit -v"
 git config --global alias.lg "log --oneline --graph --all --decorate"
 git config --global alias.last "log -1 --stat"
 
-# TDD specific aliases
-git config --global alias.green '!f() { git add -A && git commit -m "green: $1"; }; f'
-git config --global alias.refactor '!f() { git add -A && git commit -m "refactor: $1"; }; f'
-git config --global alias.red '!f() { git add -A && git commit -m "red: $1"; }; f'
+# TDD specific aliases (refuse an empty commit message)
+git config --global alias.green '!f() { if [ -z "${1:-}" ]; then echo "usage: git green <message>"; exit 1; fi; git add -A && git commit -m "green: $1"; }; f'
+git config --global alias.refactor '!f() { if [ -z "${1:-}" ]; then echo "usage: git refactor <message>"; exit 1; fi; git add -A && git commit -m "refactor: $1"; }; f'
+git config --global alias.red '!f() { if [ -z "${1:-}" ]; then echo "usage: git red <message>"; exit 1; fi; git add -A && git commit -m "red: $1"; }; f'
 
 # Check if user has set their name
 if [ -z "$(git config --global user.name 2>/dev/null)" ]; then
@@ -450,7 +456,7 @@ set -g pane-active-border-style "fg=#4a9a4a"
 
 # TDD layout shortcut
 # Creates: nvim on left (60%), vitest --watch on right (40%)
-bind T split-window -h -p 40 -c "#{pane_current_path}" \; \
+bind T split-window -h -l 40% -c "#{pane_current_path}" \; \
        send-keys "npx vitest --watch" Enter \; \
        select-pane -L
 TMUX_EOF
@@ -481,6 +487,7 @@ cat > "$I3_CONFIG/config" << 'I3_EOF'
 #    Super+f          Fullscreen
 #    Super+r          Resize mode
 #    Super+Shift+r    Restart i3
+#    Super+Shift+e    Exit i3 (asks first)
 #    Super+Shift+x    Lock screen
 # ============================================================
 
@@ -538,6 +545,9 @@ bindsym $mod+Shift+4 move container to workspace $ws4
 
 # Restart i3
 bindsym $mod+Shift+r restart
+
+# Exit i3 back to the console (asks first)
+bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'Exit i3?' -B 'Yes, exit' 'i3-msg exit'"
 
 # Lock screen
 bindsym $mod+Shift+x exec i3lock -c 1a1a1a
@@ -755,8 +765,20 @@ alias gl='git log --oneline --graph --all --decorate -20'
 alias ga='git add'
 alias gc='git commit -v'
 alias gp='git push'
-alias green='git add -A && git commit -m'
-alias refactor='f() { git add -A && git commit -m "refactor: $1"; }; f'
+
+# TDD commit helpers: same prefixes as the git aliases, refuse an empty message
+green() {
+  if [ -z "${1:-}" ]; then echo "usage: green 'what you made pass'"; return 1; fi
+  git add -A && git commit -m "green: $1"
+}
+red() {
+  if [ -z "${1:-}" ]; then echo "usage: red 'the test you wrote'"; return 1; fi
+  git add -A && git commit -m "red: $1"
+}
+refactor() {
+  if [ -z "${1:-}" ]; then echo "usage: refactor 'what you cleaned up'"; return 1; fi
+  git add -A && git commit -m "refactor: $1"
+}
 
 # Aliases: navigation
 alias ..='cd ..'
@@ -772,38 +794,14 @@ alias cp='cp -i'
 # fd is installed as fdfind on Debian
 alias fd='fdfind'
 
-# Aliases: ops tools
+# Aliases: ops tools (agenda rather than cal, so the standard cal command still works)
 alias r='ranger'
-alias cal='calcurse'
+alias agenda='calcurse'
 alias mail='neomutt'
 alias sheet='sc-im'
 
-# Document conversion: markdown to polished output
-md2pdf() {
-  local input="$1"
-  local output="${input%.md}.pdf"
-  pandoc "$input" -o "$output" \
-    --pdf-engine=pdflatex \
-    -V geometry:margin=1in \
-    -V fontsize=11pt \
-    -V mainfont="Noto Sans" \
-    --highlight-style=tango
-  echo "Created: $output"
-}
-
-md2docx() {
-  local input="$1"
-  local output="${input%.md}.docx"
-  pandoc "$input" -o "$output"
-  echo "Created: $output"
-}
-
-md2pptx() {
-  local input="$1"
-  local output="${input%.md}.pptx"
-  pandoc "$input" -t pptx -o "$output"
-  echo "Created: $output"
-}
+# Document conversion (md2pdf, md2docx, md2pptx) lives in ~/.local/bin as real
+# scripts rather than shell functions, so entr, ranger and neomutt can call it too
 
 # Watch a file and rebuild on save (e.g. watchfile report.md md2pdf)
 watchfile() {
@@ -831,7 +829,9 @@ dojo-start() {
   echo "    t         run tests once"
   echo "    tw        watch mode"
   echo "    tf        verbose output"
-  echo "    green     commit (e.g. green 'add player X logic')"
+  echo "    red       commit a failing test (red 'describe the behaviour')"
+  echo "    green     commit passing code (green 'add player X logic')"
+  echo "    refactor  commit a clean up (refactor 'extract helper')"
   echo ""
   echo "  Tmux TDD layout:"
   echo "    tmux then Ctrl+a T"
@@ -860,6 +860,57 @@ if [ -f "$SCRIPT_DIR/bin/dojo-init" ]; then
 else
   echo "WARNING: bin/dojo-init not found in repo. Skipping."
 fi
+
+# Document conversion helpers: installed as real scripts rather than shell
+# functions so they work from entr, ranger and neomutt as well as the shell.
+# xelatex (not pdflatex) so the mainfont setting actually takes effect.
+cat > "$DOJO_BIN/md2pdf" << 'MD2PDF_EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+if [ $# -ne 1 ]; then
+  echo "usage: md2pdf <file.md>"
+  exit 1
+fi
+input="$1"
+output="${input%.md}.pdf"
+pandoc "$input" -o "$output" \
+  --pdf-engine=xelatex \
+  -V geometry:margin=1in \
+  -V fontsize=11pt \
+  -V mainfont="Noto Sans" \
+  --highlight-style=tango
+echo "Created: $output"
+MD2PDF_EOF
+chmod +x "$DOJO_BIN/md2pdf"
+
+cat > "$DOJO_BIN/md2docx" << 'MD2DOCX_EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+if [ $# -ne 1 ]; then
+  echo "usage: md2docx <file.md>"
+  exit 1
+fi
+input="$1"
+output="${input%.md}.docx"
+pandoc "$input" -o "$output"
+echo "Created: $output"
+MD2DOCX_EOF
+chmod +x "$DOJO_BIN/md2docx"
+
+cat > "$DOJO_BIN/md2pptx" << 'MD2PPTX_EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+if [ $# -ne 1 ]; then
+  echo "usage: md2pptx <file.md>"
+  exit 1
+fi
+input="$1"
+output="${input%.md}.pptx"
+pandoc "$input" -t pptx -o "$output"
+echo "Created: $output"
+MD2PPTX_EOF
+chmod +x "$DOJO_BIN/md2pptx"
+echo "Installed md2pdf, md2docx, md2pptx to $DOJO_BIN"
 
 # Make sure ~/.local/bin is in PATH
 if ! grep -q 'HOME/.local/bin' "$HOME/.bashrc" 2>/dev/null; then

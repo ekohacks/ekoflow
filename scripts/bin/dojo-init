@@ -1,0 +1,86 @@
+#!/usr/bin/env bash
+# ============================================================
+#  EKOHACKS DOJO INIT
+#  Creates a fresh kata workspace wired for TDD with vitest
+#
+#  Usage:
+#    dojo-init <kata-name>
+#
+#  What you get:
+#    <kata-name>/
+#      package.json          test scripts wired to vitest
+#      src/kata.js           empty implementation
+#      test/kata.test.js     one failing test to start you off
+#    plus a git repo with the scaffold as the first red commit
+# ============================================================
+
+set -euo pipefail
+
+if [ $# -ne 1 ] || [ -z "$1" ]; then
+  echo "usage: dojo-init <kata-name>"
+  echo "example: dojo-init fizzbuzz"
+  exit 1
+fi
+
+name="$1"
+
+if ! [[ "$name" =~ ^[a-z0-9][a-z0-9-]*$ ]]; then
+  echo "ERROR: kata names use lowercase letters, digits and hyphens only."
+  echo "Try something like: dojo-init roman-numerals"
+  exit 1
+fi
+
+if [ -e "$name" ]; then
+  echo "ERROR: '$name' already exists in $(pwd). Pick another name."
+  exit 1
+fi
+
+mkdir -p "$name/src" "$name/test"
+cd "$name"
+
+cat > package.json << PKG_EOF
+{
+  "name": "$name",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest --watch"
+  }
+}
+PKG_EOF
+
+cat > src/kata.js << 'SRC_EOF'
+// Write the simplest thing that makes the test green.
+export function solve() {
+}
+SRC_EOF
+
+cat > test/kata.test.js << TEST_EOF
+import { describe, it, expect } from "vitest";
+import { solve } from "../src/kata.js";
+
+describe("$name", () => {
+  it("starts red: replace me with your first real test", () => {
+    expect(solve()).toBe("something real");
+  });
+});
+TEST_EOF
+
+cat > .gitignore << 'GITIGNORE_EOF'
+node_modules/
+coverage/
+GITIGNORE_EOF
+
+git init --quiet
+git add -A
+git commit --quiet -m "red: scaffold $name kata"
+
+echo ""
+echo "  Kata ready: $name"
+echo ""
+echo "  cd $name"
+echo "  tw        # watch mode, see your first red test"
+echo ""
+echo "  Red. Green. Refactor. Commit every green."
+echo ""
