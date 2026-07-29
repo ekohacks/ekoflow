@@ -53,8 +53,8 @@ Anyone. You do not need to know how to code. You do not need to have used Linux 
    ```bash
    sudo nmtui
    sudo apt install -y git
-   git clone https://github.com/ekohacks/dojo-setup.git
-   cd dojo-setup
+   git clone https://github.com/ekohacks/ekoflow.git
+   cd ekoflow
    ```
 3. Run the setup script (10-15 minutes, do not run as root):
    ```bash
