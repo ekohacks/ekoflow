@@ -701,6 +701,9 @@ gaps outer 0
 exec --no-startup-id xset s off
 exec --no-startup-id xset -dpms
 exec --no-startup-id nm-applet
+# Fresh installs sometimes boot with audio muted; unmute speakers and mic
+exec --no-startup-id pactl set-sink-mute @DEFAULT_SINK@ 0
+exec --no-startup-id pactl set-source-mute @DEFAULT_SOURCE@ 0
 I3_EOF
 
 # i3status config (tailored for EliteBook hardware)
