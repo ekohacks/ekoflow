@@ -11,6 +11,9 @@ These guides are written for someone who has never used a terminal, Linux, or gi
 | [Your First Day](your-first-day.md) | You are sitting in front of a dojo machine for the first time |
 | [Linux Install Guide](linux-install-guide.md) | You need to install Debian and set up a machine from scratch |
 | [Git Guide](git-guide-beginner.md) | You need to start saving and sharing your work |
+| [Neovim Cheat Sheet](neovim-cheat-sheet.md) | You are at the editor and need the keys at a glance |
+| [i3 Cheat Sheet](i3-cheat-sheet.md) | You need the window manager keys at a glance |
+| [The Neovim Ladder](neovim-ladder.md) | You are ready to build your own editor, rung by rung, over your internship |
 
 ## For operations managers
 

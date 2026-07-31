@@ -27,8 +27,8 @@ Use this checklist every time a new student joins a dojo session. Work through i
 - [ ] Run `dojo-start` on every machine to confirm the environment is working
 - [ ] Run `npx vitest run` in a test project on every machine to confirm vitest works
 - [ ] Print or display the session schedule
-- [ ] Print the Neovim cheat sheet (one per student)
-- [ ] Print the i3 cheat sheet (one per student)
+- [ ] Print the [Neovim cheat sheet](neovim-cheat-sheet.md) (one per student)
+- [ ] Print the [i3 cheat sheet](i3-cheat-sheet.md) (one per student)
 - [x] Confirm the room or space is ready (power sockets, seating, internet)
 - [ ] Test the wifi bandwidth: at least 5 Mbps per student
 
