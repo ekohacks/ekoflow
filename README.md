@@ -108,9 +108,12 @@ Read these in order based on where you are.
 ## Repo Structure
 
 ```
-dojo-setup/
-  ekohacks-dojo-setup.sh    The setup script
+ekoflow/
   README.md                  This file
+  scripts/
+    ekohacks-dojo-setup.sh   The setup orchestrator, runs setup.d in order
+    setup.d/                 Numbered setup modules, chapters of one provision
+    optional/                Standalone extras, run by hand after setup
   bin/
     dojo-init                Creates new kata projects
   docs/
