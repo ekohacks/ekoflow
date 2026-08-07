@@ -7,6 +7,11 @@
 
 return {
   "nvim-treesitter/nvim-treesitter",
+  -- Pin to the classic `master` branch. nvim-treesitter is mid-rewrite on a
+  -- new `main` branch with a completely different API (no more
+  -- `configs.setup{}`); until that stabilizes we stay on master, which is
+  -- still maintained and is what these lessons document.
+  branch = "master",
   build = ":TSUpdate", -- after install/update, compile the language parsers
   event = { "BufReadPost", "BufNewFile" }, -- load when you actually open a file
   config = function()

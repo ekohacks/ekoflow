@@ -10,9 +10,9 @@ return {
   event = "InsertEnter", -- only load once you actually start typing
   dependencies = {
     "hrsh7th/cmp-nvim-lsp", -- source: suggestions from the active language server
-    "hrsh7th/cmp-buffer",   -- source: words already in the current buffer
-    "hrsh7th/cmp-path",     -- source: filesystem paths
-    "L3MON4D3/LuaSnip",     -- snippet engine (expands e.g. "for" -> a full for-loop)
+    "hrsh7th/cmp-buffer", -- source: words already in the current buffer
+    "hrsh7th/cmp-path", -- source: filesystem paths
+    "L3MON4D3/LuaSnip", -- snippet engine (expands e.g. "for" -> a full for-loop)
     "saadparwaiz1/cmp_luasnip",
   },
   config = function()
@@ -26,8 +26,8 @@ return {
         end,
       },
       mapping = cmp.mapping.preset.insert({
-        ["<C-Space>"] = cmp.mapping.complete(),      -- manually trigger completion
-        ["<C-e>"] = cmp.mapping.abort(),              -- close the completion menu
+        ["<C-Space>"] = cmp.mapping.complete(), -- manually trigger completion
+        ["<C-e>"] = cmp.mapping.abort(), -- close the completion menu
         ["<CR>"] = cmp.mapping.confirm({ select = true }), -- accept selected suggestion
         ["<Tab>"] = cmp.mapping(function(fallback)
           if cmp.visible() then

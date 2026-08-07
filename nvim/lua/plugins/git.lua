@@ -28,6 +28,10 @@ return {
         map("n", "<leader>hr", gs.reset_hunk, "Reset hunk")
         map("n", "<leader>hp", gs.preview_hunk, "Preview hunk diff")
         map("n", "<leader>hb", gs.toggle_current_line_blame, "Toggle line blame")
+        map("n", "<leader>hd", gs.diffthis, "Diff file vs index")
+        map("n", "<leader>hD", function()
+          gs.diffthis("~")
+        end, "Diff file vs last commit")
       end,
     })
   end,

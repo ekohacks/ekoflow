@@ -14,9 +14,9 @@ return {
     dependencies = { "williamboman/mason.nvim" },
     opts = {
       ensure_installed = {
-        "black",   -- Python formatter (PEP8-compliant, opinionated, no config needed)
-        "ruff",    -- also usable as a formatter/import-sorter for Python
+        "ruff", -- Python formatter/linter/import-sorter (used by conform's ruff_format)
         "prettier", -- JS/TS/CSS/Markdown formatter, kept for EkoHacks' frontend repos
+        "stylua", -- Lua formatter (standalone Rust binary, no runtime deps)
       },
     },
   },
@@ -35,7 +35,7 @@ return {
     },
     opts = {
       formatters_by_ft = {
-        python = { "black" },
+        python = { "ruff_format" },
         javascript = { "prettier" },
         typescript = { "prettier" },
         typescriptreact = { "prettier" },
