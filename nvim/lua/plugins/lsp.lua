@@ -12,7 +12,7 @@
 --   nvim-lspconfig       -- ready-made configs for dozens of language servers
 --
 --   pyright  -- Python type checking & navigation (Microsoft's server)
---   ruff_lsp -- extremely fast Python linter, also used in formatting.lua
+--   ruff -- extremely fast Python linter, also used in formatting.lua
 --   ts_ls    -- TypeScript/JS server (kept since EkoHacks also does TS/React)
 --   lua_ls   -- so editing THIS config gets autocomplete for the Neovim API
 
@@ -25,7 +25,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
     opts = {
-      ensure_installed = { "pyright", "ruff_lsp", "ts_ls", "lua_ls" },
+      ensure_installed = { "pyright", "ruff", "ts_ls", "lua_ls" },
     },
   },
   {
@@ -36,7 +36,6 @@ return {
       "hrsh7th/cmp-nvim-lsp", -- lets completion.lua's engine talk to LSP
     },
     config = function()
-      local lspconfig = require("lspconfig")
       local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
       -- Keymaps that apply once ANY language server attaches to a buffer.
@@ -52,31 +51,37 @@ return {
           map("K", vim.lsp.buf.hover, "Hover documentation")
           map("<leader>rn", vim.lsp.buf.rename, "Rename symbol")
           map("<leader>ca", vim.lsp.buf.code_action, "Code action")
-          map("[d", vim.diagnostic.goto_prev, "Previous diagnostic")
-          map("]d", vim.diagnostic.goto_next, "Next diagnostic")
+          -- Nvim 0.11+ replaced diagnostic.goto_prev/goto_next with jump().
+          map("[d", function() vim.diagnostic.jump({ count = -1 }) end, "Previous diagnostic")
+          map("]d", function() vim.diagnostic.jump({ count = 1 }) end, "Next diagnostic")
           map("<leader>e", vim.diagnostic.open_float, "Show diagnostic in float")
         end,
       })
 
-      -- Python: pyright handles types/navigation; ruff_lsp handles fast
-      -- linting. Running both together is the current community-recommended
-      -- pairing (ruff is much faster than pylint/flake8 for lint feedback).
-      lspconfig.pyright.setup({ capabilities = capabilities })
-      lspconfig.ruff_lsp.setup({ capabilities = capabilities })
+      -- Nvim 0.11+ ships a native LSP config API (vim.lsp.config / .enable),
+      -- so nvim-lspconfig's old `lspconfig.<server>.setup{}` framework is
+      -- deprecated. nvim-lspconfig now just ships base configs under lsp/ that
+      -- vim.lsp.enable() picks up; we layer our overrides on with
+      -- vim.lsp.config(). See :help lspconfig-nvim-0.11.
 
-      -- TypeScript/JS, kept for EkoHacks' React/Redux codebases.
-      lspconfig.ts_ls.setup({ capabilities = capabilities })
+      -- Shared defaults for every server: give the completion engine's
+      -- capabilities to all of them at once via the "*" wildcard.
+      vim.lsp.config("*", { capabilities = capabilities })
 
       -- Lua, so working inside THIS config has full autocomplete for the
       -- Neovim API (vim.*, etc). `vim` global is otherwise flagged unknown.
-      lspconfig.lua_ls.setup({
-        capabilities = capabilities,
+      vim.lsp.config("lua_ls", {
         settings = {
           Lua = {
             diagnostics = { globals = { "vim" } },
           },
         },
       })
+
+      -- Turn on autostart for our servers. Python: pyright handles
+      -- types/navigation; ruff handles fast linting (much faster than
+      -- pylint/flake8). ts_ls kept for EkoHacks' React/Redux codebases.
+      vim.lsp.enable({ "pyright", "ruff", "ts_ls", "lua_ls" })
     end,
   },
 }
