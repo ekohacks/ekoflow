@@ -9,7 +9,7 @@ return {
   -- variant if you prefer light mode.
   {
     "folke/tokyonight.nvim",
-    lazy = false,   -- load immediately (colorschemes shouldn't lazy-load)
+    lazy = false, -- load immediately (colorschemes shouldn't lazy-load)
     priority = 1000, -- load before other plugins so there's no flash of default colors
     config = function()
       vim.cmd.colorscheme("tokyonight-night")

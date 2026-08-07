@@ -29,6 +29,6 @@ vim.opt.rtp:prepend(lazypath)
 -- This is why plugins/lsp.lua, plugins/ui.lua, etc. each `return { ... }`.
 require("lazy").setup("plugins", {
   install = { colorscheme = { "habamax" } }, -- fallback theme while ui.lua's theme installs
-  checker = { enabled = false },             -- don't auto-check for plugin updates in background
-  change_detection = { notify = false },     -- don't pop up a notification on config file changes
+  checker = { enabled = false }, -- don't auto-check for plugin updates in background
+  change_detection = { notify = false }, -- don't pop up a notification on config file changes
 })

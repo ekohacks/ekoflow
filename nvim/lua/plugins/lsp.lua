@@ -52,8 +52,12 @@ return {
           map("<leader>rn", vim.lsp.buf.rename, "Rename symbol")
           map("<leader>ca", vim.lsp.buf.code_action, "Code action")
           -- Nvim 0.11+ replaced diagnostic.goto_prev/goto_next with jump().
-          map("[d", function() vim.diagnostic.jump({ count = -1 }) end, "Previous diagnostic")
-          map("]d", function() vim.diagnostic.jump({ count = 1 }) end, "Next diagnostic")
+          map("[d", function()
+            vim.diagnostic.jump({ count = -1 })
+          end, "Previous diagnostic")
+          map("]d", function()
+            vim.diagnostic.jump({ count = 1 })
+          end, "Next diagnostic")
           map("<leader>e", vim.diagnostic.open_float, "Show diagnostic in float")
         end,
       })
