@@ -20,6 +20,8 @@ return {
   cmd = "Telescope", -- lazy-load: only load when a :Telescope command is run
   keys = {
     { "<leader>ff", "<cmd>Telescope find_files<cr>", desc = "Find files" },
+    { "<leader>fs", "<cmd>Telescope lsp_document_symbols<cr>", desc = "Symbols in current file" },
+    { "<leader>fw", "<cmd>Telescope lsp_workspace_symbols<cr>", desc = "Symbols across project" },
     { "<leader>fg", "<cmd>Telescope live_grep<cr>", desc = "Grep across project" },
     { "<leader>fb", "<cmd>Telescope buffers<cr>", desc = "List open buffers" },
     { "<leader>fh", "<cmd>Telescope help_tags<cr>", desc = "Search help docs" },
