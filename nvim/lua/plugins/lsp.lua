@@ -13,7 +13,7 @@
 --
 --   pyright  -- Python type checking & navigation (Microsoft's server)
 --   ruff -- extremely fast Python linter, also used in formatting.lua
---   ts_ls    -- TypeScript/JS server (kept since EkoHacks also does TS/React)
+--   vtsls    -- TypeScript/JS server wrapper (better auto-import than ts_ls)
 --   lua_ls   -- so editing THIS config gets autocomplete for the Neovim API
 
 return {
@@ -25,7 +25,7 @@ return {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { "williamboman/mason.nvim" },
     opts = {
-      ensure_installed = { "pyright", "ruff", "ts_ls", "lua_ls" },
+      ensure_installed = { "pyright", "ruff", "vtsls", "lua_ls" },
     },
   },
   {
@@ -51,6 +51,21 @@ return {
           map("K", vim.lsp.buf.hover, "Hover documentation")
           map("<leader>rn", vim.lsp.buf.rename, "Rename symbol")
           map("<leader>ca", vim.lsp.buf.code_action, "Code action")
+          -- Import helpers. `source.addMissingImports` is a TypeScript source
+          -- action (adds every unimported symbol at once); `source.organizeImports`
+          -- sorts and prunes. `apply = true` runs the action without prompting.
+          map("<leader>ia", function()
+            vim.lsp.buf.code_action({
+              context = { only = { "source.addMissingImports" } },
+              apply = true,
+            })
+          end, "Add missing imports")
+          map("<leader>io", function()
+            vim.lsp.buf.code_action({
+              context = { only = { "source.organizeImports" } },
+              apply = true,
+            })
+          end, "Organize imports")
           -- Nvim 0.11+ replaced diagnostic.goto_prev/goto_next with jump().
           map("[d", function()
             vim.diagnostic.jump({ count = -1 })
@@ -84,8 +99,9 @@ return {
 
       -- Turn on autostart for our servers. Python: pyright handles
       -- types/navigation; ruff handles fast linting (much faster than
-      -- pylint/flake8). ts_ls kept for EkoHacks' React/Redux codebases.
-      vim.lsp.enable({ "pyright", "ruff", "ts_ls", "lua_ls" })
+      -- pylint/flake8). vtsls (the maintained TypeScript server wrapper, better
+      -- auto-import & code actions than the older ts_ls) for React/TS work.
+      vim.lsp.enable({ "pyright", "ruff", "vtsls", "lua_ls" })
     end,
   },
 }

@@ -38,8 +38,17 @@ autocmd("BufReadPost", {
   end,
 })
 
+-- Auto-show the diagnostic(error/warning) message when the cursor rests on a word.
+--
+autocmd("CursorHold", {
+  desc = "Show diagnostic float when cursor rests on a word",
+  callback = function()
+    vim.diagnostic.open_float(nil, { focus = false, scope = "line" })
+  end,
+})
+
 -- Python files: EkoHacks follows PEP8, so force 4-space indent explicitly
--- even though options.lua already defaults to 4 — this makes the intent
+---- even though options.lua already defaults to 4 — this makes the intent
 -- explicit and filetype-scoped, which matters once other languages (e.g.
 -- JS/TS at 2 spaces) get added later.
 autocmd("FileType", {
