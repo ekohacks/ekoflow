@@ -41,6 +41,7 @@ return {
         typescriptreact = { "prettier" },
         javascriptreact = { "prettier" },
         json = { "prettier" },
+        jsonc = { "prettier" }, -- tsconfig.json, .eslintrc, etc. are detected as 'jsonc', not 'json'
         markdown = { "prettier" },
         lua = { "stylua" },
       },
