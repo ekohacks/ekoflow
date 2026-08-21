@@ -4,15 +4,43 @@ Right now your laptop runs Windows or macOS. Either way it uses most of its 8GB 
 
 After this guide, your laptop will use about 200MB of RAM at idle. Everything you removed was something you did not need. Everything that remains is something you chose. That is the point.
 
-This takes about 45 minutes. You will need a USB stick (at least 1GB) and a wifi connection. If your machine is the MacBook, you will also need a phone that can do USB tethering or an ethernet adapter, because the MacBook's wifi only starts working once setup completes. Part 5 explains what to do.
+This takes about 45 minutes, a little longer if you are keeping Windows on the machine. You will need a USB stick (at least 1GB) and a wifi connection. If your machine is the MacBook, you will also need a phone that can do USB tethering or an ethernet adapter, because the MacBook's wifi only starts working once setup completes. Part 5 explains what to do.
 
 ---
 
 ## Before You Touch Anything
 
+### Decide: Erase Windows, or Keep It
+
+There are two ways through this guide.
+
+**Erase Windows.** The whole drive becomes Debian. This is what every dojo machine gets, and it is the simpler path. One operating system, one set of problems, nothing to choose at startup.
+
+**Keep Windows alongside Debian.** Debian goes on its own partition next to Windows and you choose which one to start each time you turn the laptop on. Pick this if the laptop is your own and you still need Windows for something else. It is a perfectly good path, it just has three extra steps, all marked **Keeping Windows** below. Do your learning in Debian, not in Windows with a Linux window open. The point of the setup is that there is nothing between you and the work.
+
+This path is for Windows laptops. The dojo MacBooks are always erased.
+
+Decide now, because the next step depends on it.
+
 ### Back Up Your Files
 
-This process erases Windows completely. Everything on your laptop will be gone. If there is anything you want to keep (photos, documents, anything) copy it to an external drive or Google Drive now. Not later. Now.
+If you are erasing Windows, everything on your laptop will be gone. If you are keeping Windows, the drive still has to be resized to make room, and resizing a drive is the kind of thing that occasionally goes wrong. Either way, if there is anything you want to keep (photos, documents, anything) copy it to an external drive or Google Drive now. Not later. Now.
+
+### Keeping Windows: Make Room on the Drive
+
+Skip this if you are erasing Windows.
+
+Debian needs its own space on the drive, and only Windows can safely shrink the Windows partition. Do this on Windows before you make the USB stick.
+
+**Turn off device encryption.** Open Settings, then Privacy & security, then Device encryption, and switch it off. If you see BitLocker instead, open it and turn it off for drive C. Wait for it to finish, which can take a while. Why? Encryption ties the drive to the current BIOS settings. You are about to change those settings in Part 3, and if the drive is still encrypted Windows will lock you out and demand a recovery key you may not have.
+
+**Turn off Fast Startup.** Open Control Panel, then Power Options, then "Choose what the power buttons do", then "Change settings that are currently unavailable". Untick "Turn on fast startup" and save. Why? Fast Startup does not really shut Windows down, it hibernates it. A hibernated Windows leaves the drive in a half open state that Linux cannot share safely.
+
+**Shrink the Windows partition.** Press the Windows key, type `disk management`, and open "Create and format hard disk partitions". Right click the big partition labelled C: and choose **Shrink Volume**. In the box "Enter the amount of space to shrink in MB" type **51200** (that is 50GB) and click Shrink. Debian with everything in this guide uses around 15GB, so 50GB leaves you room to work. If Windows will not let you shrink that much, take what it offers as long as it is at least 30GB.
+
+You now see a block marked **Unallocated** after C:. Leave it exactly like that. Do not format it, do not give it a letter. The Debian installer will find it.
+
+Shut Windows down fully (Start, Power, Shut down) and carry on to Part 1.
 
 ### What You Need
 
@@ -89,6 +117,8 @@ Find the Boot tab. Make sure USB is listed before the hard drive. This tells the
 
 Some HP EliteBooks have a setting called SATA Emulation or Intel RST. If you see this, change it to AHCI. This is about how the laptop talks to its hard drive. Linux works better with AHCI. If you do not see this setting, skip it. Not every laptop has it.
 
+**Keeping Windows:** if you change this setting, Windows may refuse to start afterwards, because it was installed expecting the old one. It is not broken, it just needs telling. Before you change the setting, boot into Windows, open Command Prompt as administrator and run `bcdedit /set {current} safeboot minimal`. Shut down, change the setting to AHCI in the BIOS, and start Windows once. It comes up in Safe Mode and picks up the new driver. Open Command Prompt as administrator again and run `bcdedit /deletevalue {current} safeboot`, then restart. Windows is back to normal and happy with AHCI. If you would rather not do this, leave the setting as it is. Debian will still work, it is simply a little better with AHCI.
+
 Press **F10** to save and exit. The laptop restarts.
 
 ---
@@ -155,13 +185,19 @@ Type your full name. Choose a short, lowercase username, something like **kofi**
 
 Select it.
 
-### Partitioning → Guided, use entire disk
+### Partitioning → Guided
 
-This is where Windows gets erased. Select **Guided - use entire disk**. Select your hard drive (there should be only one). Select **All files in one partition**. Select **Finish partitioning and write changes to disk**. When it asks "Write the changes to disk?" select **Yes**.
+This is the one screen where the two paths differ. Read the option you pick carefully, because the two look alike and the wrong one cannot be undone.
+
+**Erasing Windows:** select **Guided - use entire disk**. Select your hard drive (there should be only one). Select **All files in one partition**. Select **Finish partitioning and write changes to disk**. When it asks "Write the changes to disk?" select **Yes**.
 
 This is the point of no return. After this, Windows is gone. Everything on the drive is being replaced with a clean Debian system.
 
-Why are we erasing everything instead of keeping Windows alongside Linux? Because dual-boot setups create confusion. Two operating systems on one machine means two sets of problems. At the dojo, the machine has one purpose. Keeping it simple means fewer things go wrong.
+**Keeping Windows:** select **Guided - use the largest continuous free space**. This tells the installer to use only the Unallocated block you made earlier and to leave Windows alone. Select **All files in one partition**. On the overview screen that follows, check before you go on: you should see your Windows partition (labelled ntfs, tens or hundreds of GB) still listed, with no change marked against it, and new partitions marked for Debian in the free space. If the Windows partition is marked for deletion or formatting, select **Go Back** and look again at which option you chose. When you are satisfied, select **Finish partitioning and write changes to disk** and answer **Yes**.
+
+If "use the largest continuous free space" is not offered, the installer cannot see any free space. That means the shrink in "Make Room on the Drive" did not take. Do not pick "use entire disk" as a substitute. Stop, boot back into Windows, and do the shrink again.
+
+Why do dojo machines erase Windows rather than keep it? Because one operating system means one set of problems. The machine has one purpose. If this is your own laptop and you need Windows for other things, keeping it is fine, and everything that follows works the same way.
 
 ### Package Manager → A mirror near you
 
@@ -185,6 +221,8 @@ When it asks if you want to install GRUB, select **Yes**. Select your hard drive
 
 GRUB is what starts your operating system when you turn on the laptop. Without it, the laptop would not know how to find Debian. Think of it as the bridge between the BIOS and your operating system.
 
+**Keeping Windows:** GRUB also finds Windows and adds it to a menu, so each time you turn the laptop on you choose between Debian and Windows. If Windows is missing from that menu after you reboot, see "Windows is missing from the boot menu" under Common Problems. It is a two minute fix.
+
 ### Finish
 
 The installer says "Installation complete." Remove your USB stick. Select **Continue**. The laptop restarts.
@@ -192,6 +230,8 @@ The installer says "Installation complete." Remove your USB stick. Select **Cont
 ---
 
 ## Part 6: First Login
+
+**Keeping Windows:** the laptop shows a menu first, with Debian at the top and Windows Boot Manager below it. Debian is already highlighted. Press Enter, or wait a few seconds and it starts on its own. This menu is what you use whenever you want Windows instead.
 
 Your laptop restarts and shows a text prompt:
 
@@ -415,9 +455,35 @@ Read the last error message. Copy it down exactly. Then try running the script a
 
 You can go back to the previous screen using the Back button. If you are too far in, restart the installer by rebooting from the USB stick. It is better to start over than to continue with wrong settings.
 
+### Windows is missing from the boot menu
+
+You kept Windows, but the menu at startup only shows Debian. GRUB needs to be told to look for other operating systems:
+
+```bash
+sudo apt install -y os-prober
+echo 'GRUB_DISABLE_OS_PROBER=false' | sudo tee -a /etc/default/grub
+sudo update-grub
+```
+
+The last command prints what it found. You should see a line mentioning Windows Boot Manager. Reboot and Windows is back in the menu.
+
+### The clock is wrong after switching between Windows and Debian
+
+Windows and Linux disagree about how to read the laptop's built in clock, so each time you switch the time jumps by a few hours. Tell Debian to read it the way Windows does:
+
+```bash
+sudo timedatectl set-local-rtc 1
+```
+
+### Debian cannot open your Windows files, or says the drive is "in use"
+
+Windows was hibernated rather than shut down, so it still has hold of the drive. Boot into Windows, turn off Fast Startup as described in "Make Room on the Drive", and shut down properly with Start, Power, Shut down.
+
 ### You want to go back to Windows
 
-You will need to download Windows from Microsoft and install it fresh. This guide erased Windows completely. That is why we asked you to back up first.
+If you kept Windows, choose Windows Boot Manager in the menu at startup. Nothing else to do.
+
+If you erased Windows, you will need to download Windows from Microsoft and install it fresh. That is why we asked you to back up first.
 
 ---
 
